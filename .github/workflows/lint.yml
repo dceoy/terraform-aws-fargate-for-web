@@ -1,0 +1,29 @@
+---
+name: Lint
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Install commands
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+      - name: Execute terraform fmt
+        run: |
+          terraform fmt -recursive -check
+      - name: Execute tflint
+        run: |
+          tflint --recursive
+      - name: Execute tfsec
+        run: |
+          tfsec .
