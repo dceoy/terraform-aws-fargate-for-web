@@ -1,0 +1,11 @@
+region                         = "ap-northeast-1"
+profile                        = "default"
+system_name                    = "slc"
+env_type                       = "dev"
+vpc_cidr_block                 = "10.0.0.0/16"
+enable_vpc_flow_log            = true
+private_subnet_count           = 1
+public_subnet_count            = 1
+subnet_newbits                 = 8
+create_nat_gateways            = true
+create_vpc_interface_endpoints = false

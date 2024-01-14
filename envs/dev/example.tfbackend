@@ -1,0 +1,4 @@
+bucket = "tfstate-us-east-1-123456789012"
+key = "terraform-aws-ecs-with-ssm/envs/dev/terraform.tfstate"
+region = "us-east-1"
+dynamodb_table = "tfstate-lock"
