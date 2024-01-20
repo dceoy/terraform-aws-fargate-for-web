@@ -187,3 +187,38 @@ output "ssm_session_log_iam_policy_arn" {
   description = "SSM session log IAM policy ARN"
   value       = module.ssm.ssm_session_log_iam_policy_arn
 }
+
+output "ecs_cluster_id" {
+  description = "ECS cluster ID"
+  value       = module.ecs.ecs_cluster_id
+}
+
+output "ecs_cluster_cloudwatch_log_group_name" {
+  description = "ECS cluster CloudWatch log group name"
+  value       = module.ecs.ecs_cluster_cloudwatch_log_group_name
+}
+
+output "ecs_cluster_kms_key_arn" {
+  description = "ECS cluster KMS key ARN"
+  value       = module.ecs.ecs_cluster_kms_key_arn
+}
+
+output "ecs_task_execution_iam_role_arn" {
+  description = "ECS task execution IAM role ARN"
+  value       = module.ecs.ecs_task_execution_iam_role_arn
+}
+
+output "ecr_repository_url" {
+  description = "ECR repository URL"
+  value       = module.ecr.ecr_repository_url
+}
+
+output "codecommit_repository_id" {
+  description = "CodeCommit repository ID"
+  value       = module.ecr.codecommit_repository_id
+}
+
+output "codecommit_repository_clone_url_http" {
+  description = "CodeCommit repository URL for cloning over HTTPS"
+  value       = module.ecr.codecommit_repository_clone_url_http
+}

@@ -40,6 +40,12 @@ module "ssm" {
   env_type    = var.env_type
 }
 
+module "ecs" {
+  source      = "../../modules/ecs"
+  system_name = var.system_name
+  env_type    = var.env_type
+}
+
 module "ecr" {
   source                     = "../../modules/ecr"
   system_name                = var.system_name
