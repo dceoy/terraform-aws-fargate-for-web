@@ -35,7 +35,7 @@ module "vpce" {
 }
 
 module "ssm" {
-  source      = "github.com/dceoy/terraform-aws-vpc-for-slc//modules/ssm?ref=v0.1.1"
+  source      = "../../modules/ssm"
   system_name = var.system_name
   env_type    = var.env_type
 }
