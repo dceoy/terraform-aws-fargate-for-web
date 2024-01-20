@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/ubuntu:latest
+FROM public.ecr.aws/ubuntu/ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -14,4 +14,5 @@ RUN set -e \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/bin/bash", "-lc"]
+ENTRYPOINT ["tail"]
+CMD ["-F", "/dev/null"]

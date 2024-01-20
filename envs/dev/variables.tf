@@ -79,3 +79,15 @@ variable "create_vpc_interface_endpoints" {
   type        = bool
   default     = true
 }
+
+variable "ecr_repository_name" {
+  description = "ECR repository name"
+  type        = string
+  default     = null
+}
+
+variable "codecommit_repository_name" {
+  description = "CodeCommit repository name"
+  type        = string
+  default     = null
+}

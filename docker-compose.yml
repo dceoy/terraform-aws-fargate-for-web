@@ -4,9 +4,11 @@ services:
   ubuntu:
     container_name: ubuntu
     build:
-      context: .
+      context: ./modules/docker
       dockerfile: Dockerfile
     image: dceoy/ubuntu:latest
     entrypoint:
-      - /bin/bash
-      - -lc
+      - tail
+    command:
+      - -F
+      - /dev/null
