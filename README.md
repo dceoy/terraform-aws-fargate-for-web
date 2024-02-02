@@ -1,9 +1,9 @@
 terraform-aws-ecs-with-ssm
 ==========================
 
-Terraform module of ECS with SSM
+Terraform modules of Amazon ECS with AWS Systems Manager
 
-[![Lint](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint.yml)
+[![Lint and scan](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint-and-scan.yml/badge.svg)](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint-and-scan.yml)
 
 Installation
 ------------

@@ -1,0 +1,21 @@
+---
+name: Lint and scan
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  cfn-lint:
+    uses: dceoy/gh-actions-for-devops/.github/workflows/aws-cloudformation-lint.yml@main
+    with:
+      search-path: .
+      python-version: 3.x
+  tf-lint-and-scan:
+    uses: dceoy/gh-actions-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
+    with:
+      search-path: .
+      terraform-version: latest
