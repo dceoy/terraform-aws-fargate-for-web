@@ -1,9 +1,9 @@
-terraform-aws-ecs-with-ssm
-==========================
+terraform-aws-fargate-for-web
+=============================
 
-Terraform modules of Amazon ECS with AWS Systems Manager
+Terraform modules of AWS Fargate for web application
 
-[![Lint and scan](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint-and-scan.yml/badge.svg)](https://github.com/dceoy/terraform-aws-ecs-with-ssm/actions/workflows/lint-and-scan.yml)
+[![CI/CD](https://github.com/dceoy/terraform-aws-fargate-for-web/actions/workflows/ci.yml/badge.svg)](https://github.com/dceoy/terraform-aws-fargate-for-web/actions/workflows/ci.yml)
 
 Installation
 ------------
@@ -11,45 +11,41 @@ Installation
 1.  Check out the repository.
 
     ```sh
-    $ git clone https://github.com/dceoy/terraform-aws-ecs-with-ssm.git
-    $ cd terraform-aws-ecs-with-ssm
-    ````
+    $ git clone https://github.com/dceoy/terraform-aws-crud-http-api.git
+    $ cd terraform-aws-crud-http-api
+    ```
 
 2.  Install [AWS CLI](https://aws.amazon.com/cli/) and set `~/.aws/config` and `~/.aws/credentials`.
 
-3.  Create a S3 bucket and a DynamoDB table for Terraform.
-    (cf. [terraform-aws-vpc-for-slc](https://github.com/dceoy/terraform-aws-vpc-for-slc))
+3.  Install [Terraform](https://www.terraform.io/) and [Terragrunt](https://terragrunt.gruntwork.io/).
 
-4.  Create configuration files.
+4.  Build the Docker image.
 
     ```sh
-    $ cp env/dev/example.tfbackend env/dev/aws.tfbackend
-    $ cp env/dev/example.tfvars env/dev/dev.tfvars
-    $ vi env/dev/aws.tfbackend
-    $ vi env/dev/dev.tfvars
+    $ ./docker_buildx_bake.sh
     ```
 
-5.  Initialize a new Terraform working directory.
+5.  Initialize Terraform working directories.
 
     ```sh
-    $ terraform -chdir='envs/dev/' init -reconfigure -backend-config='./aws.tfbackend'
+    $ terragrunt run-all init --terragrunt-working-dir='envs/dev/' -upgrade -reconfigure
     ```
 
 6.  Generates a speculative execution plan. (Optional)
 
     ```sh
-    $ terraform -chdir='envs/dev/' plan -var-file='./dev.tfvars'
+    $ terragrunt run-all plan --terragrunt-working-dir='envs/dev/'
     ```
 
 7.  Creates or updates infrastructure.
 
     ```sh
-    $ terraform -chdir='envs/dev/' apply -var-file='./dev.tfvars' -auto-approve
+    $ terragrunt run-all apply --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
     ```
 
 Cleanup
 -------
 
 ```sh
-$ terraform -chdir='envs/dev/' apply -var-file='./dev.tfvars' -auto-approve -destroy
+$ terragrunt run-all destroy --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
 ```
