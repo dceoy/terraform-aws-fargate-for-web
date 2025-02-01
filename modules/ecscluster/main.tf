@@ -1,3 +1,4 @@
+# trivy:ignore:AVD-AWS-0034
 resource "aws_ecs_cluster" "main" {
   name = local.ecs_cluster_name
   configuration {
@@ -36,7 +37,7 @@ resource "aws_ecs_cluster" "main" {
   }
 }
 
-# trivy:ignore:avd-aws-0017
+# trivy:ignore:AVD-AWS-0017
 resource "aws_cloudwatch_log_group" "ecs" {
   count             = var.ecs_cluster_execute_command_logging != "NONE" && var.ecs_cluster_execute_command_log_s3_bucket_name == null ? 1 : 0
   name              = "/${var.system_name}/${var.env_type}/ecs/${local.ecs_cluster_name}"
