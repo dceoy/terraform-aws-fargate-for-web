@@ -105,6 +105,7 @@ inputs = {
   docker_image_primary_tag                  = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
   docker_host                               = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
   cloudwatch_logs_retention_in_days         = 30
+  iam_role_force_detach_policies            = true
   ecs_cluster_execute_command_logging       = "DEFAULT"
   ecs_cluster_setting_container_insights    = "enhanced"
 }

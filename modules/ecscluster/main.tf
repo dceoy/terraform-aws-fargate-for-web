@@ -49,3 +49,53 @@ resource "aws_cloudwatch_log_group" "ecs" {
     EnvType    = var.env_type
   }
 }
+
+resource "aws_iam_role" "execution" {
+  name                  = "${var.system_name}-${var.env_type}-ecs-execution-iam-role"
+  description           = "ECS execution IAM role"
+  force_detach_policies = var.iam_role_force_detach_policies
+  path                  = "/"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowECSTasksToAssumeRole"
+        Effect = "Allow"
+        Action = ["sts:AssumeRole"]
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  ]
+  tags = {
+    Name       = "${var.system_name}-${var.env_type}-ecs-execution-iam-role"
+    SystemName = var.system_name
+    EnvType    = var.env_type
+  }
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "execution" {
+  role       = aws_iam_role.execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy" "kms" {
+  count = var.kms_key_arn != null ? 1 : 0
+  name  = "${var.system_name}-${var.env_type}-ecs-execution-iam-role-policy"
+  role  = aws_iam_role.execution.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "AllowKMSAccess"
+        Effect   = "Allow"
+        Action   = ["kms:GenerateDataKey"]
+        Resource = [var.kms_key_arn]
+      }
+    ]
+  })
+}

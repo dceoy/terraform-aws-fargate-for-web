@@ -26,6 +26,12 @@ variable "kms_key_arn" {
   default     = null
 }
 
+variable "iam_role_force_detach_policies" {
+  description = "Whether to force detaching any IAM policies the IAM role has before destroying it"
+  type        = bool
+  default     = true
+}
+
 variable "ecs_cluster_execute_command_logging" {
   description = "ECS cluster log setting to use for redirecting logs for execute command results"
   type        = string
