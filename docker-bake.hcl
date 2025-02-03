@@ -37,7 +37,6 @@ target "streamlit" {
     USER_UID       = USER_UID
     USER_GID       = USER_GID
     USER_NAME      = USER_NAME
-    MODEL_GGUF_URL = MODEL_GGUF_URL
   }
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]

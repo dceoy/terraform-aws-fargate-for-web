@@ -1,6 +1,6 @@
 output "ecs_cluster_id" {
   description = "ECS cluster ID"
-  value       = aws_ecs_cluster.ecs.id
+  value       = aws_ecs_cluster.main.id
 }
 
 output "ecs_cluster_cloudwatch_logs_log_group_name" {

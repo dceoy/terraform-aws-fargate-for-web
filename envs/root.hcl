@@ -62,6 +62,24 @@ inputs = {
   create_kms_key                            = true
   kms_key_deletion_window_in_days           = 30
   kms_key_rotation_period_in_days           = 365
+  create_io_s3_bucket                       = true
+  create_awslogs_s3_bucket                  = true
+  create_s3logs_s3_bucket                   = true
+  s3_force_destroy                          = true
+  s3_noncurrent_version_expiration_days     = 7
+  s3_abort_incomplete_multipart_upload_days = 7
+  s3_expired_object_delete_marker           = true
+  vpc_cidr_block                            = "10.0.0.0/16"
+  vpc_secondary_cidr_blocks                 = []
+  vpc_assign_generated_ipv6_cidr_block      = false
+  cloudwatch_logs_retention_in_days         = 30
+  private_subnet_count                      = 1
+  public_subnet_count                       = 1
+  subnet_newbits                            = 8
+  nat_gateway_count                         = 0
+  vpc_interface_endpoint_services = [
+    "ecr.dkr", "ecr.api", "ecs", "ecs-agent", "ecs-telemetry", "logs", "kms", "ssm", "ssmmessages"
+  ]
   ecr_repository_name                       = local.image_name
   ecr_image_secondary_tags                  = compact(split("\n", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability                  = "MUTABLE"

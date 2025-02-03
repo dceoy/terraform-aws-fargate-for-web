@@ -51,10 +51,6 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 RUN \
-      groupadd --gid "${USER_GID}" "${USER_NAME}" \
-      && useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
-
-RUN \
       rm -f /etc/apt/apt.conf.d/docker-clean
 
 RUN \
@@ -66,8 +62,8 @@ RUN \
         ca-certificates
 
 RUN \
-      /sbin/groupadd --gid "${USER_GID}" "${USER_NAME}" \
-      && /sbin/useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
+      groupadd --gid "${USER_GID}" "${USER_NAME}" \
+      && useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
