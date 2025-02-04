@@ -11,17 +11,8 @@ dependency "kms" {
   mock_outputs_merge_strategy_with_state = "shallow"
 }
 
-dependency "docker" {
-  config_path = "../docker"
-  mock_outputs = {
-    docker_registry_primary_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:latest"
-  }
-  mock_outputs_merge_strategy_with_state = "shallow"
-}
-
 inputs = {
-  kms_key_arn   = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
-  ecr_image_uri = dependency.docker.outputs.docker_registry_primary_image_uri
+  kms_key_arn = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
 }
 
 terraform {
