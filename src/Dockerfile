@@ -66,7 +66,6 @@ RUN \
       && useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
 
 RUN \
-      --mount=type=bind,source=.,target=/mnt/host \
       mkdir -p /opt/streamlit \
       && chown -R "${USER_NAME}:${USER_NAME}" /opt/streamlit
 
@@ -76,7 +75,7 @@ USER "${USER_NAME}"
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
-      cp /mnt/host/app.py /opt/streamlit/
+      cp /mnt/host/src/app.py /opt/streamlit/
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
       CMD curl --fail http://localhost:8501/ || exit 1

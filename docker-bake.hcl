@@ -28,8 +28,8 @@ group "default" {
 
 target "streamlit" {
   tags       = ["${REGISTRY}/streamlit-app:${TAG}"]
-  context    = "./src"
-  dockerfile = "Dockerfile"
+  context    = "."
+  dockerfile = "src/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   args = {

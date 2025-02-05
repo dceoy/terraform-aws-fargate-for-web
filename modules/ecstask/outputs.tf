@@ -1,16 +1,16 @@
 output "ecs_task_definition_arn" {
   description = "ECS task definition ARN"
-  value       = aws_ecs_task_definition.task.arn
+  value       = aws_ecs_task_definition.fargate.arn
 }
 
 output "ecs_task_definition_arn_without_revision" {
   description = "ECS task definition ARN without revision"
-  value       = aws_ecs_task_definition.task.arn_without_revision
+  value       = aws_ecs_task_definition.fargate.arn_without_revision
 }
 
 output "ecs_task_definition_revision" {
   description = "ECS task definition revision"
-  value       = aws_ecs_task_definition.task.revision
+  value       = aws_ecs_task_definition.fargate.revision
 }
 
 output "ecs_task_iam_role_arn" {

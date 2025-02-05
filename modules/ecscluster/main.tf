@@ -68,9 +68,6 @@ resource "aws_iam_role" "execution" {
       }
     ]
   })
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-  ]
   tags = {
     Name       = "${var.system_name}-${var.env_type}-ecs-execution-iam-role"
     SystemName = var.system_name
@@ -79,8 +76,8 @@ resource "aws_iam_role" "execution" {
 }
 
 resource "aws_iam_role_policy_attachments_exclusive" "execution" {
-  role       = aws_iam_role.execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role_name   = aws_iam_role.execution.name
+  policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
 resource "aws_iam_role_policy" "kms" {

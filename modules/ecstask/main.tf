@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "fargate" {
     cpu_architecture        = var.ecs_task_runtime_platform_cpu_architecture
   }
   dynamic "ephemeral_storage" {
-    for_each = length(var.ecs_task_ephemeral_storage_size_in_gib) > 0 ? [true] : []
+    for_each = var.ecs_task_ephemeral_storage_size_in_gib > 0 ? [true] : []
     content {
       size_in_gib = var.ecs_task_ephemeral_storage_size_in_gib
     }
@@ -25,23 +25,23 @@ resource "aws_ecs_task_definition" "fargate" {
       versionConsistency     = "enabled"
       essential              = true
       readonlyRootFilesystem = false
-      entryPoint             = lookup(var.ecs_task_container_entry_points, each.key, null)
-      command                = lookup(var.ecs_task_container_commands, each.key, null)
-      workingDirectory       = lookup(var.ecs_task_container_working_directories, each.key, null)
-      user                   = lookup(var.ecs_task_container_users, each.key, null)
-      portMappings           = lookup(var.ecs_task_container_port_mappings, each.key, null)
-      restartPolicy          = lookup(var.ecs_task_container_restart_policies, each.key, null)
-      healthCheck            = lookup(var.ecs_task_container_health_checks, each.key, null)
-      startTimeout           = lookup(var.ecs_task_container_start_timeouts, each.key, null)
-      stopTimeout            = lookup(var.ecs_task_container_stop_timeouts, each.key, null)
+      entryPoint             = lookup(var.ecs_task_container_entry_points, n, null)
+      command                = lookup(var.ecs_task_container_commands, n, null)
+      workingDirectory       = lookup(var.ecs_task_container_working_directories, n, null)
+      user                   = lookup(var.ecs_task_container_users, n, null)
+      portMappings           = lookup(var.ecs_task_container_port_mappings, n, null)
+      restartPolicy          = lookup(var.ecs_task_container_restart_policies, n, null)
+      healthCheck            = lookup(var.ecs_task_container_health_checks, n, null)
+      startTimeout           = lookup(var.ecs_task_container_start_timeouts, n, null)
+      stopTimeout            = lookup(var.ecs_task_container_stop_timeouts, n, null)
       environment = [
-        for k, v in lookup(var.ecs_task_container_environment_variables, each.key, {}) : {
+        for k, v in lookup(var.ecs_task_container_environment_variables, n, {}) : {
           name  = k
           value = v
         }
       ]
       secrets = [
-        for k, v in lookup(var.ecs_task_container_secrets, each.key, {}) : {
+        for k, v in lookup(var.ecs_task_container_secrets, n, {}) : {
           name      = k
           valueFrom = v
         }
