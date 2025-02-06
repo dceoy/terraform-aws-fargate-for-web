@@ -32,14 +32,20 @@ variable "iam_role_force_detach_policies" {
   default     = true
 }
 
-variable "ecs_image_uris" {
-  description = "ECS image URIs (key: container name, value: image URI)"
-  type        = map(string)
-}
-
 variable "ecs_execution_iam_role_arn" {
   description = "ECS execution IAM role ARN"
   type        = string
+}
+
+variable "ecs_task_container_definitions_template_file_path" {
+  description = "Path to ECS task container definitions template file"
+  type        = string
+}
+
+variable "ecs_task_container_definitions_template_file_vars" {
+  description = "Variables for ECS task container definitions template file"
+  type        = map(string)
+  default     = {}
 }
 
 variable "ecs_task_definition_family" {
@@ -92,84 +98,6 @@ variable "ecs_task_skip_destroy" {
   description = "Whether to retain the old revision when the resource is destroyed or replacement is necessary"
   type        = bool
   default     = false
-}
-
-variable "ecs_task_container_entry_points" {
-  description = "Entry points for ECS task containers (key: container name, value: entry point)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_commands" {
-  description = "Commands for ECS task containers (key: container name, value: command)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_working_directories" {
-  description = "Working directories for ECS task containers (key: container name, value: working directory)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_users" {
-  description = "Users for ECS task containers (key: container name, value: user)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_environment_variables" {
-  description = "Environment variables for ECS tasks"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_secrets" {
-  description = "Secrets to expose to containers for ECS tasks (key: environment variable name, value: secret ARN of Secrets Manager or SSM Parameter Store)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ecs_task_container_port_mappings" {
-  description = "Lists of port mappings for ECS task containers (key: container name, value: list of port mappings)"
-  type        = map(list(map(any)))
-  default     = {}
-  validation {
-    condition     = alltrue([for v in values(var.ecs_task_container_port_mappings) : alltrue([for m in v : alltrue([for k in keys(m) : contains(["appProtocol", "containerPort", "containerPortRange", "hostPort", "hostPortRange", "name", "protocol"], k)])])])
-    error_message = "Port mappings allow only appProtocol, containerPort, containerPortRange, hostPort, hostPortRange, name, and protocol as keys"
-  }
-}
-
-variable "ecs_task_container_restart_policies" {
-  description = "Restart policies for ECS task containers (key: container name, value: restart policy)"
-  type        = map(map(any))
-  default     = {}
-  validation {
-    condition     = alltrue([for v in values(var.ecs_task_container_restart_policies) : alltrue([for k, p in v : contains(["enabled", "ignoredExitCodes", "restartAttemptPeriod"], p)])])
-    error_message = "Restart policies allow only enabled, ignoredExitCodes, and restartAttemptPeriod as keys"
-  }
-}
-
-variable "ecs_task_container_health_checks" {
-  description = "Health checks for ECS task containers (key: container name, value: health check)"
-  type        = map(map(any))
-  default     = {}
-  validation {
-    condition     = alltrue([for v in values(var.ecs_task_container_health_checks) : alltrue([for k, h in v : contains(["command", "interval", "timeout", "retries", "startPeriod"], h)])])
-    error_message = "Health checks allow only command, interval, timeout, retries, and startPeriod as keys"
-  }
-}
-
-variable "ecs_task_container_start_timeouts" {
-  description = "Start timeouts for ECS task containers (key: container name, value: start timeout)"
-  type        = map(number)
-  default     = {}
-}
-
-variable "ecs_task_container_stop_timeouts" {
-  description = "Stop timeouts for ECS task containers (key: container name, value: stop timeout)"
-  type        = map(number)
-  default     = {}
 }
 
 variable "ecs_task_iam_role_policy_arns" {

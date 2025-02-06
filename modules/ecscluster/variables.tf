@@ -35,7 +35,7 @@ variable "iam_role_force_detach_policies" {
 variable "ecs_cluster_execute_command_logging" {
   description = "ECS cluster log setting to use for redirecting logs for execute command results"
   type        = string
-  default     = "DEFAULT"
+  default     = "OVERRIDE"
   validation {
     condition     = contains(["NONE", "DEFAULT", "OVERRIDE"], var.ecs_cluster_execute_command_logging)
     error_message = "ECS cluster execute command logging must be either NONE, DEFAULT, or OVERRIDE"

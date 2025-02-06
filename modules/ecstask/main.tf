@@ -18,44 +18,16 @@ resource "aws_ecs_task_definition" "fargate" {
       size_in_gib = var.ecs_task_ephemeral_storage_size_in_gib
     }
   }
-  container_definitions = jsonencode([
-    for n, u in var.ecs_image_uris : {
-      name                   = n
-      image                  = u
-      versionConsistency     = "enabled"
-      essential              = true
-      readonlyRootFilesystem = false
-      entryPoint             = lookup(var.ecs_task_container_entry_points, n, null)
-      command                = lookup(var.ecs_task_container_commands, n, null)
-      workingDirectory       = lookup(var.ecs_task_container_working_directories, n, null)
-      user                   = lookup(var.ecs_task_container_users, n, null)
-      portMappings           = lookup(var.ecs_task_container_port_mappings, n, null)
-      restartPolicy          = lookup(var.ecs_task_container_restart_policies, n, null)
-      healthCheck            = lookup(var.ecs_task_container_health_checks, n, null)
-      startTimeout           = lookup(var.ecs_task_container_start_timeouts, n, null)
-      stopTimeout            = lookup(var.ecs_task_container_stop_timeouts, n, null)
-      environment = [
-        for k, v in lookup(var.ecs_task_container_environment_variables, n, {}) : {
-          name  = k
-          value = v
-        }
-      ]
-      secrets = [
-        for k, v in lookup(var.ecs_task_container_secrets, n, {}) : {
-          name      = k
-          valueFrom = v
-        }
-      ]
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          awslogs-region        = local.region
-          awslogs-group         = aws_cloudwatch_log_group.task.name
-          awslogs-stream-prefix = n
-        }
+  container_definitions = templatefile(
+    var.ecs_task_container_definitions_template_file_path,
+    merge(
+      var.ecs_task_container_definitions_template_file_vars,
+      {
+        awslogs-region = local.region
+        awslogs-group  = aws_cloudwatch_log_group.task.name
       }
-    }
-  ])
+    )
+  )
   tags = {
     Name       = local.ecs_task_definition_family
     SystemName = var.system_name
