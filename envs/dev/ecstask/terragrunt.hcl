@@ -31,12 +31,12 @@ inputs = {
   kms_key_arn                = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
   ecs_execution_iam_role_arn = dependency.ecscluster.outputs.ecs_execution_iam_role_arn
   ecs_task_container_definitions_template_file_vars = {
-    name                        = include.root.inputs.ecr_repository_name
+    name                        = include.root.inputs.ecs_service_container_name
     image                       = dependency.docker.outputs.docker_registry_primary_image_uri
     system-name                 = include.root.inputs.system_name
     env-type                    = include.root.inputs.env_type
-    port-mapping-container-port = 8501
-    port-mapping-host-port      = 8501
+    port-mapping-container-port = include.root.inputs.ecs_service_container_port
+    port-mapping-host-port      = include.root.inputs.ecs_service_container_port
   }
 }
 

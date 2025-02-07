@@ -21,7 +21,7 @@ types-toml = "^0.10.8"
 
 [tool.ruff]
 line-length = 88
-exclude = ["build"]
+exclude = ["build", "envs"]
 preview = true
 
 [tool.ruff.lint]
@@ -105,7 +105,7 @@ convention = "google"
 
 [tool.pyright]
 typeCheckingMode = "strict"
-exclude = ["build"]
+exclude = ["build", "envs"]
 threads = 0
 reportUnknownMemberType = false
 reportUnknownVariableType = false

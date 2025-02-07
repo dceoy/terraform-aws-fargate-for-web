@@ -5,9 +5,11 @@ locals {
     "X86_64" = "linux/amd64"
     "ARM64"  = "linux/arm64"
   }
-  repo_root   = get_repo_root()
-  env_vars    = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  ecr_address = "${local.env_vars.locals.account_id}.dkr.ecr.${local.env_vars.locals.region}.amazonaws.com"
+  lb_target_group_port = 8501
+  lb_listener_port     = 80
+  repo_root            = get_repo_root()
+  env_vars             = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  ecr_address          = "${local.env_vars.locals.account_id}.dkr.ecr.${local.env_vars.locals.region}.amazonaws.com"
 }
 
 terraform {
@@ -59,29 +61,27 @@ catalog {
 }
 
 inputs = {
-  system_name                               = local.env_vars.locals.system_name
-  env_type                                  = local.env_vars.locals.env_type
-  create_kms_key                            = true
-  kms_key_deletion_window_in_days           = 30
-  kms_key_rotation_period_in_days           = 365
-  create_io_s3_bucket                       = true
-  create_awslogs_s3_bucket                  = true
-  create_s3logs_s3_bucket                   = true
-  s3_force_destroy                          = true
-  s3_noncurrent_version_expiration_days     = 7
-  s3_abort_incomplete_multipart_upload_days = 7
-  s3_expired_object_delete_marker           = true
-  vpc_cidr_block                            = "10.0.0.0/16"
-  vpc_secondary_cidr_blocks                 = []
-  vpc_assign_generated_ipv6_cidr_block      = false
-  cloudwatch_logs_retention_in_days         = 30
-  private_subnet_count                      = 2
-  public_subnet_count                       = 2
-  subnet_newbits                            = 8
-  nat_gateway_count                         = 0
-  vpc_interface_endpoint_services = [
-    "ecr.dkr", "ecr.api", "ecs", "ecs-agent", "ecs-telemetry", "logs", "kms", "ssm", "ssmmessages"
-  ]
+  system_name                                       = local.env_vars.locals.system_name
+  env_type                                          = local.env_vars.locals.env_type
+  create_kms_key                                    = true
+  kms_key_deletion_window_in_days                   = 30
+  kms_key_rotation_period_in_days                   = 365
+  create_io_s3_bucket                               = true
+  create_awslogs_s3_bucket                          = true
+  create_s3logs_s3_bucket                           = true
+  s3_force_destroy                                  = true
+  s3_noncurrent_version_expiration_days             = 7
+  s3_abort_incomplete_multipart_upload_days         = 7
+  s3_expired_object_delete_marker                   = true
+  vpc_cidr_block                                    = "10.0.0.0/16"
+  vpc_secondary_cidr_blocks                         = []
+  vpc_assign_generated_ipv6_cidr_block              = false
+  cloudwatch_logs_retention_in_days                 = 30
+  private_subnet_count                              = 2
+  public_subnet_count                               = 2
+  subnet_newbits                                    = 8
+  nat_gateway_count                                 = 0
+  vpc_interface_endpoint_services                   = [] # ["ecr.dkr", "ecr.api", "ecs", "ecs-agent", "ecs-telemetry", "logs", "kms", "ssm", "ssmmessages"]
   ecr_repository_name                               = local.image_name
   ecr_image_secondary_tags                          = compact(split("\n", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability                          = "MUTABLE"
@@ -134,7 +134,7 @@ inputs = {
   lb_ip_address_type                                = "ipv4"
   lb_preserve_host_header                           = false
   lb_xff_header_processing_mode                     = "append"
-  lb_target_group_port                              = 80
+  lb_target_group_port                              = local.lb_target_group_port
   lb_target_group_protocol                          = "HTTP"
   lb_target_group_protocol_version                  = "HTTP1"
   lb_target_group_ip_address_type                   = "ipv4"
@@ -148,9 +148,28 @@ inputs = {
   lb_target_group_health_check                      = {}
   lb_target_group_health_dns_failover               = {}
   lb_target_group_health_unhealthy_state_routing    = {}
-  lb_listener_port                                  = 80
+  lb_listener_port                                  = local.lb_listener_port
   lb_listener_protocol                              = "HTTP"
   lb_listener_ssl_policy                            = "ELBSecurityPolicy-2016-08"
   lb_listener_mutual_authentication                 = {}
   lb_listener_stickiness                            = {}
+  ecs_service_container_name                        = local.image_name
+  ecs_service_container_port                        = local.lb_target_group_port
+  ecs_service_platform_version                      = "LATEST"
+  ecs_service_desired_count                         = 2
+  ecs_service_deployment_maximum_percent            = 200
+  ecs_service_deployment_minimum_healthy_percent    = 100
+  ecs_service_health_check_grace_period_seconds     = 60
+  ecs_service_availability_zone_rebalancing         = "ENABLED"
+  ecs_service_enable_ecs_managed_tags               = true
+  ecs_service_enable_execute_command                = true
+  ecs_service_propagate_tags                        = "TASK_DEFINITION"
+  ecs_service_force_delete                          = true
+  ecs_service_force_new_deployment                  = true
+  ecs_service_wait_for_steady_state                 = false
+  ecs_service_deployment_controller_type            = "ECS"
+  ecs_service_alarms                                = {}
+  ecs_service_deployment_circuit_breaker            = {}
+  ecs_service_ordered_placement_strategy            = []
+  ecs_service_placement_constraints                 = []
 }
