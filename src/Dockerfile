@@ -78,7 +78,7 @@ RUN \
       cp /mnt/host/src/app.py /opt/streamlit/
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-      CMD curl --fail http://localhost:8501/ || exit 1
+      CMD curl --fail http://localhost:8501/healthz || exit 1
 
 ENTRYPOINT ["/usr/local/bin/python", "-m", "streamlit"]
 CMD [ "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
