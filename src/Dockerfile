@@ -47,6 +47,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONIOENCODING=UTF-8
 ENV PIP_NO_CACHE_DIR=off
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+ENV STREAMLIT_SERVER_HEADLESS=true
+ENV STREAMLIT_SERVER_PORT=8501
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
@@ -69,7 +72,7 @@ RUN \
       mkdir -p /opt/streamlit \
       && chown -R "${USER_NAME}:${USER_NAME}" /opt/streamlit
 
-EXPOSE 8501
+EXPOSE ${STREAMLIT_SERVER_PORT}
 
 USER "${USER_NAME}"
 
@@ -78,7 +81,7 @@ RUN \
       cp /mnt/host/src/app.py /opt/streamlit/
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-      CMD curl --fail http://localhost:8501/healthz || exit 1
+      CMD curl --fail http://localhost:${STREAMLIT_SERVER_PORT}/healthz || exit 1
 
 ENTRYPOINT ["/usr/local/bin/python", "-m", "streamlit"]
-CMD [ "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["run", "/opt/streamlit/app.py"]

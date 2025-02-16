@@ -28,24 +28,24 @@ Installation
 5.  Initialize Terraform working directories.
 
     ```sh
-    $ terragrunt run-all init --terragrunt-working-dir='envs/dev/' -upgrade -reconfigure
+    $ terragrunt run-all init --working-dir='envs/dev/' -upgrade -reconfigure
     ```
 
 6.  Generates a speculative execution plan. (Optional)
 
     ```sh
-    $ terragrunt run-all plan --terragrunt-working-dir='envs/dev/'
+    $ terragrunt run-all plan --working-dir='envs/dev/'
     ```
 
 7.  Creates or updates infrastructure.
 
     ```sh
-    $ terragrunt run-all apply --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
+    $ terragrunt run-all apply --working-dir='envs/dev/' --non-interactive
     ```
 
 Cleanup
 -------
 
 ```sh
-$ terragrunt run-all destroy --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
+$ terragrunt run-all destroy --working-dir='envs/dev/' --non-interactive
 ```
