@@ -80,19 +80,34 @@ resource "aws_iam_role_policy_attachments_exclusive" "execution" {
   policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
-resource "aws_iam_role_policy" "kms" {
-  count = var.kms_key_arn != null ? 1 : 0
-  name  = "${var.system_name}-${var.env_type}-ecs-execution-iam-role-policy"
+resource "aws_iam_role_policy" "logs" {
+  count = length(aws_cloudwatch_log_group.cluster) > 0 ? 1 : 0
+  name  = "${var.system_name}-${var.env_type}-ecs-execution-logs-iam-policy"
   role  = aws_iam_role.execution.id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Sid      = "AllowKMSAccess"
-        Effect   = "Allow"
-        Action   = ["kms:GenerateDataKey"]
-        Resource = [var.kms_key_arn]
-      }
-    ]
+    Statement = concat(
+      [
+        {
+          Sid    = "AllowLogStreamAccess"
+          Effect = "Allow"
+          Action = [
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ]
+          Resource = ["${aws_cloudwatch_log_group.cluster[count.index].arn}:*"]
+        }
+      ],
+      (
+        var.kms_key_arn != null ? [
+          {
+            Sid      = "AllowKMSAccess"
+            Effect   = "Allow"
+            Action   = ["kms:GenerateDataKey"]
+            Resource = [var.kms_key_arn]
+          }
+        ] : []
+      )
+    )
   })
 }
