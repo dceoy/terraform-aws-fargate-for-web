@@ -198,3 +198,15 @@ resource "aws_lb_listener" "app" {
     EnvType    = var.env_type
   }
 }
+
+resource "aws_route53_record" "alb" {
+  count   = var.route53_record_zone_id != null ? 1 : 0
+  zone_id = var.route53_record_zone_id
+  name    = var.route53_record_name
+  type    = var.route53_record_type
+  alias {
+    name                   = aws_lb.app.dns_name
+    zone_id                = aws_lb.app.zone_id
+    evaluate_target_health = var.route53_record_alias_evaluate_target_health
+  }
+}

@@ -441,3 +441,31 @@ variable "lb_listener_stickiness" {
     error_message = "Stickiness configuration allows only duration and enabled as keys"
   }
 }
+
+variable "route53_record_zone_id" {
+  description = "Route 53 record hosted zone ID for the ALB"
+  type        = string
+  default     = null
+}
+
+variable "route53_record_name" {
+  description = "Route 53 record name for the ALB"
+  type        = string
+  default     = ""
+}
+
+variable "route53_record_type" {
+  description = "Route 53 record type for the ALB"
+  type        = string
+  default     = "A"
+  validation {
+    condition     = var.route53_record_type == "A" || var.route53_record_type == "AAAA"
+    error_message = "Route 53 record type must be A or AAAA"
+  }
+}
+
+variable "route53_record_alias_evaluate_target_health" {
+  description = "Whether to evaluate the health of the ALB for responding to Route 53 DNS queries"
+  type        = bool
+  default     = true
+}

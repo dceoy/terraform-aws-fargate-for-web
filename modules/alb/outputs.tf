@@ -32,3 +32,13 @@ output "lb_listener_arn" {
   description = "ALB listener ARN"
   value       = aws_lb_listener.app.arn
 }
+
+output "lb_route53_record_name" {
+  description = "ALB Route 53 record name"
+  value       = length(aws_route53_record.alb) > 0 ? aws_route53_record.alb[0].name : null
+}
+
+output "lb_route53_record_fqdn" {
+  description = "ALB Route 53 record FQDN"
+  value       = length(aws_route53_record.alb) > 0 ? aws_route53_record.alb[0].fqdn : null
+}
