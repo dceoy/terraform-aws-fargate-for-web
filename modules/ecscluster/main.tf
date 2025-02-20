@@ -95,7 +95,7 @@ resource "aws_iam_role_policy" "logs" {
             "logs:CreateLogStream",
             "logs:PutLogEvents"
           ]
-          Resource = ["${aws_cloudwatch_log_group.cluster[count.index].arn}:*"]
+          Resource = ["${aws_cloudwatch_log_group.cluster[0].arn}:*"]
         }
       ],
       (
