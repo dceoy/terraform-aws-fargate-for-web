@@ -22,7 +22,7 @@ resource "aws_acm_certificate" "cert" {
 
 resource "aws_route53_record" "acm" {
   for_each = length(aws_acm_certificate.cert) > 0 && var.route53_record_zone_id != null ? {
-    for o in aws_acm_certificate.cert[0].domain_validation_options : o.domain_name => o
+    for o in aws_acm_certificate.cert[0].domain_validation_options : o.domain_name => o if !startswith(o.domain_name, "*.")
   } : {}
   zone_id = var.route53_record_zone_id
   name    = each.value.resource_record_name
