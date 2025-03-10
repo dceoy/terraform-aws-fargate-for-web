@@ -1233,14 +1233,14 @@ files = [
 
 [[package]]
 name = "types-pycurl"
-version = "7.45.4.20241216"
+version = "7.45.6.20250309"
 description = "Typing stubs for pycurl"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "types_pycurl-7.45.4.20241216-py3-none-any.whl", hash = "sha256:d50eb912216ae2bab4f581bf44cd013f24002f001077a38fcc662a25b525342c"},
-    {file = "types_pycurl-7.45.4.20241216.tar.gz", hash = "sha256:ce5ad0978e09ef43ee97b54ac68c183eda27ee0c981f70ec3f1b867ff07611f4"},
+    {file = "types_pycurl-7.45.6.20250309-py3-none-any.whl", hash = "sha256:9ff396a54633960f9aac5be5a286930c8e44de491b1c57352be2ba41e5103a29"},
+    {file = "types_pycurl-7.45.6.20250309.tar.gz", hash = "sha256:7d4de9aa804d9b923e431c284fe0243e39985e4f97c0d6a9c9f8ccc6001ca2f8"},
 ]
 
 [[package]]
