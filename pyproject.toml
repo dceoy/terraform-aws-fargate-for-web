@@ -10,7 +10,7 @@ watchdog = "^6.0.0"
 aws-lambda-powertools = {extras = ["tracer"], version = "^3.4.1"}
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.9.1"
+ruff = "^0.10.0"
 pyright = "^1.1.379"
 types-cachetools = "^5.5.0"
 types-decorator = "^5.1.8"
