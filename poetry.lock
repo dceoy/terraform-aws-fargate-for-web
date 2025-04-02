@@ -1218,14 +1218,14 @@ referencing = "*"
 
 [[package]]
 name = "types-protobuf"
-version = "5.29.1.20250315"
+version = "5.29.1.20250402"
 description = "Typing stubs for protobuf"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "types_protobuf-5.29.1.20250315-py3-none-any.whl", hash = "sha256:57efd51fd0979d1f5e1d94053d1e7cfff9c028e8d05b17e341b91a1c7fce37c4"},
-    {file = "types_protobuf-5.29.1.20250315.tar.gz", hash = "sha256:0b05bc34621d046de54b94fddd5f4eb3bf849fe2e13a50f8fb8e89f35045ff49"},
+    {file = "types_protobuf-5.29.1.20250402-py3-none-any.whl", hash = "sha256:a5407ef210a7fb8a9dc0711120c2a2531a860e1786cf7017ae55c5b3e1cb091b"},
+    {file = "types_protobuf-5.29.1.20250402.tar.gz", hash = "sha256:96edcf1ec04d556d5b7bd0906c6aee23d7d8009b647a5a4b655bd9d996432d14"},
 ]
 
 [[package]]
