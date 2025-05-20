@@ -37,6 +37,7 @@ inputs = {
     env-type                    = include.root.inputs.env_type
     port-mapping-container-port = include.root.inputs.ecs_service_container_port
     port-mapping-host-port      = include.root.inputs.ecs_service_container_port
+    restart-attempt-period      = include.root.inputs.ecs_task_container_restart_attempt_period
   }
 }
 

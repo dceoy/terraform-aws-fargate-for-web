@@ -29,6 +29,11 @@
         "awslogs-group": "${awslogs-group}",
         "awslogs-stream-prefix": "${name}"
       }
+    },
+    "restartPolicy": {
+        "enabled": true,
+        "ignoredExitCodes": [0],
+        "restartAttemptPeriod": ${restart-attempt-period}
     }
   }
 ]

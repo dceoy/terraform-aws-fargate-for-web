@@ -121,6 +121,7 @@ inputs = {
   ecs_task_skip_destroy                             = false
   ecs_task_iam_role_policy_arns                     = []
   ecs_task_container_definitions_template_file_path = find_in_parent_folders("ecs-task-container-definitions.json.tpl")
+  ecs_task_container_restart_attempt_period         = 180
   lb_security_group_ingress_from_port               = 0
   lb_security_group_ingress_to_port                 = 0
   lb_security_group_ingress_protocol                = "-1"
