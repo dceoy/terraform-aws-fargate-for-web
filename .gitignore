@@ -37,4 +37,7 @@ override.tf.json
 terraform.rc
 
 # .terragrunt-cache directory
-.terragrunt-cache
+.terragrunt-cache/
+
+# Claude Code configuration directory
+.claude/
