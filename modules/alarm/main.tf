@@ -27,8 +27,19 @@ resource "aws_sns_topic_policy" "alarm" {
           StringEquals = {
             "aws:SourceAccount" = local.account_id
           }
-          ArnLike = {
-            "aws:SourceArn" = "arn:aws:budgets::${local.account_id}:*"
+        }
+      },
+      {
+        Sid    = "EventsPublishSNSMessages"
+        Effect = "Allow"
+        Principal = {
+          Service = "events.amazonaws.com"
+        }
+        Action   = ["sns:Publish"]
+        Resource = [aws_sns_topic.alarm.arn]
+        Condition = {
+          StringEquals = {
+            "aws:SourceAccount" = local.account_id
           }
         }
       }
@@ -37,7 +48,7 @@ resource "aws_sns_topic_policy" "alarm" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "error" {
-  for_each       = var.cloudwatch_log_metric_filter_log_groups
+  for_each       = { for k, v in var.cloudwatch_log_metric_filter_log_groups : k => v if v != null && v != "" }
   name           = "${var.system_name}-${var.env_type}-cloudwatch-log-metric-filter-${each.key}-error"
   log_group_name = each.value
   pattern        = var.cloudwatch_log_metric_filter_error_pattern

@@ -32,7 +32,7 @@ variable "cloudwatch_metric_alarm_period" {
   default     = 300
   validation {
     condition     = var.cloudwatch_metric_alarm_period == 10 || var.cloudwatch_metric_alarm_period == 20 || var.cloudwatch_metric_alarm_period == 30 || (var.cloudwatch_metric_alarm_period % 60 == 0)
-    error_message = "The period must be a multiple of 10 or 60 seconds."
+    error_message = "Period must be a multiple of 10 or 60 seconds."
   }
 }
 

@@ -4,9 +4,9 @@ resource "aws_chatbot_slack_channel_configuration" "slack" {
   iam_role_arn          = aws_iam_role.slack[count.index].arn
   slack_channel_id      = var.chatbot_slack_channel_id
   slack_team_id         = var.chatbot_slack_workspace_id
-  guardrail_policy_arns = length(var.guardrail_policy_arns) > 0 ? var.guardrail_policy_arns : null
+  guardrail_policy_arns = length(var.chatbot_guardrail_policy_arns) > 0 ? var.chatbot_guardrail_policy_arns : null
   sns_topic_arns        = length(var.sns_topic_arns) > 0 ? var.sns_topic_arns : null
-  logging_level         = "NONE"
+  logging_level         = var.chatbot_logging_level
   tags = {
     Name       = "${var.system_name}-${var.env_type}-chatbot-slack-channel-configuration"
     SystemName = var.system_name
