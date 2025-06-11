@@ -15,7 +15,7 @@ pyright = "^1.1.379"
 types-cachetools = "^6.0.0"
 types-decorator = "^5.1.8"
 types-jsonschema = "^4.23.0"
-types-protobuf = "^5.29.1"
+types-protobuf = "^6.30.2"
 types-pycurl = "^7.45.4"
 types-toml = "^0.10.8"
 
