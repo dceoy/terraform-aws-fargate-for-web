@@ -39,5 +39,5 @@ terraform.rc
 # .terragrunt-cache directory
 .terragrunt-cache/
 
-# Claude Code configuration directory
-.claude/
+# Serena MCP
+.serena/
