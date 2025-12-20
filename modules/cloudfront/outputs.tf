@@ -67,3 +67,13 @@ output "cloudfront_monitoring_subscription_id" {
   description = "ID of the CloudFront monitoring subscription"
   value       = aws_cloudfront_monitoring_subscription.cdn.id
 }
+
+output "cloudfront_route53_record_name" {
+  description = "CloudFront Route 53 record name"
+  value       = length(aws_route53_record.cloudfront) > 0 ? aws_route53_record.cloudfront[0].name : null
+}
+
+output "cloudfront_route53_record_fqdn" {
+  description = "CloudFront Route 53 record FQDN"
+  value       = length(aws_route53_record.cloudfront) > 0 ? aws_route53_record.cloudfront[0].fqdn : null
+}

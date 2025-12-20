@@ -11,7 +11,7 @@ resource "aws_security_group" "alb" {
     protocol         = var.lb_security_group_ingress_protocol
     cidr_blocks      = var.lb_security_group_ingress_ipv4_cidr_blocks
     ipv6_cidr_blocks = var.lb_security_group_ingress_ipv6_cidr_blocks
-    prefix_list_ids  = local.lb_security_group_ingress_prefix_list_ids
+    prefix_list_ids  = local.lb_restrict_to_cloudfront ? [data.aws_ec2_managed_prefix_list.cloudfront.id] : null
   }
   egress {
     description      = "Allow all outbound traffic"
@@ -211,7 +211,7 @@ resource "aws_lb_listener" "app" {
   }
 }
 
-resource "aws_lb_listener_rule" "cloudfront_origin_header" {
+resource "aws_lb_listener_rule" "app" {
   count        = local.lb_restrict_to_cloudfront ? 1 : 0
   listener_arn = aws_lb_listener.app.arn
   priority     = 1
@@ -243,7 +243,7 @@ resource "aws_lb_listener_rule" "cloudfront_origin_header" {
 }
 
 resource "aws_route53_record" "alb" {
-  count   = var.route53_record_zone_id != null ? 1 : 0
+  count   = var.route53_record_zone_id != null && (!local.lb_restrict_to_cloudfront) ? 1 : 0
   zone_id = var.route53_record_zone_id
   name    = var.route53_record_name
   type    = var.route53_record_type

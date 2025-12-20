@@ -212,3 +212,15 @@ resource "aws_cloudfront_monitoring_subscription" "cdn" {
     }
   }
 }
+
+resource "aws_route53_record" "cloudfront" {
+  count   = var.route53_record_zone_id != null ? 1 : 0
+  zone_id = var.route53_record_zone_id
+  name    = var.route53_record_name
+  type    = var.route53_record_type
+  alias {
+    name                   = aws_cloudfront_distribution.cdn.domain_name
+    zone_id                = aws_cloudfront_distribution.cdn.hosted_zone_id
+    evaluate_target_health = var.route53_record_alias_evaluate_target_health
+  }
+}

@@ -3,7 +3,6 @@ data "aws_ec2_managed_prefix_list" "cloudfront" {
 }
 
 locals {
-  lb_name                                   = "${var.system_name}-${var.env_type}-alb"
-  lb_restrict_to_cloudfront                 = length(var.cloudfront_origin_custom_headers) > 0
-  lb_security_group_ingress_prefix_list_ids = local.lb_restrict_to_cloudfront ? [data.aws_ec2_managed_prefix_list.cloudfront.id] : null
+  lb_name                   = "${var.system_name}-${var.env_type}-alb"
+  lb_restrict_to_cloudfront = length(var.cloudfront_origin_custom_headers) > 0
 }

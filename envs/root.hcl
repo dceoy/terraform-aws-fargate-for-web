@@ -5,11 +5,12 @@ locals {
     "X86_64" = "linux/amd64"
     "ARM64"  = "linux/arm64"
   }
-  lb_target_group_port = 8501
-  lb_listener_port     = 80
-  repo_root            = get_repo_root()
-  env_vars             = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  ecr_address          = "${local.env_vars.locals.account_id}.dkr.ecr.${local.env_vars.locals.region}.amazonaws.com"
+  lb_target_group_port     = 8501
+  lb_listener_port         = 80
+  repo_root                = get_repo_root()
+  env_vars                 = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  ecr_address              = "${local.env_vars.locals.account_id}.dkr.ecr.${local.env_vars.locals.region}.amazonaws.com"
+  docker_image_primary_tag = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
 }
 
 terraform {
@@ -58,6 +59,7 @@ catalog {
     "${local.repo_root}/modules/ecscluster",
     "${local.repo_root}/modules/ecstask",
     "${local.repo_root}/modules/alb",
+    "${local.repo_root}/modules/cloudfront",
     "${local.repo_root}/modules/ecsservice"
   ]
 }
@@ -108,7 +110,7 @@ inputs = {
   docker_image_build_build_args                     = {}
   docker_image_build_platform                       = local.docker_image_build_platforms[local.fargate_architecture]
   docker_image_build_target                         = "app"
-  docker_image_primary_tag                          = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
+  docker_image_primary_tag                          = local.docker_image_primary_tag
   docker_host                                       = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
   cloudwatch_logs_retention_in_days                 = 30
   iam_role_force_detach_policies                    = true
@@ -207,18 +209,20 @@ inputs = {
       override_action = "none"
     }
   ]
-  cloudfront_function_runtime                            = "cloudfront-js-2.0"
-  cloudfront_function_publish                            = true
-  cloudfront_enabled                                     = true
-  cloudfront_is_ipv6_enabled                             = true
-  cloudfront_aliases                                     = []
-  cloudfront_http_version                                = "http2and3"
-  cloudfront_cache_behavior_viewer_protocol_policy       = "redirect-to-https"
-  cloudfront_price_class                                 = "PriceClass_100"
-  cloudfront_retain_on_delete                            = false
-  cloudfront_wait_for_deployment                         = true
-  cloudfront_staging                                     = false
-  cloudfront_origin_custom_headers                       = {}
+  cloudfront_function_runtime                      = "cloudfront-js-2.0"
+  cloudfront_function_publish                      = true
+  cloudfront_enabled                               = true
+  cloudfront_is_ipv6_enabled                       = true
+  cloudfront_aliases                               = []
+  cloudfront_http_version                          = "http2and3"
+  cloudfront_cache_behavior_viewer_protocol_policy = "redirect-to-https"
+  cloudfront_price_class                           = "PriceClass_100"
+  cloudfront_retain_on_delete                      = false
+  cloudfront_wait_for_deployment                   = true
+  cloudfront_staging                               = false
+  cloudfront_origin_custom_headers = {
+    X-Container-Image-Primary-Tag = local.docker_image_primary_tag
+  }
   cloudfront_ordered_cache_behavior_alb_path_pattern     = "/alb/*"
   cloudfront_ordered_cache_behavior_lambda_path_pattern  = "/lambda/*"
   cloudfront_ordered_cache_behavior_s3_path_pattern      = "/s3/*"

@@ -122,7 +122,11 @@ variable "cloudfront_cache_behavior_viewer_protocol_policy" {
 variable "cloudfront_price_class" {
   description = "Price class for the CloudFront distribution"
   type        = string
-  default     = null
+  default     = "PriceClass_All"
+  validation {
+    condition     = contains(["PriceClass_All", "PriceClass_200", "PriceClass_100"], var.cloudfront_price_class)
+    error_message = "Price class must be PriceClass_All, PriceClass_200, or PriceClass_100"
+  }
 }
 
 variable "cloudfront_retain_on_delete" {
@@ -199,4 +203,32 @@ variable "cloudfront_realtime_metrics_subscription_status" {
   description = "CloudFront real-time log configuration subscription status"
   type        = string
   default     = "Enabled"
+}
+
+variable "route53_record_zone_id" {
+  description = "Route 53 record hosted zone ID for the ALB"
+  type        = string
+  default     = null
+}
+
+variable "route53_record_name" {
+  description = "Route 53 record name for the ALB"
+  type        = string
+  default     = ""
+}
+
+variable "route53_record_type" {
+  description = "Route 53 record type for the ALB"
+  type        = string
+  default     = "A"
+  validation {
+    condition     = var.route53_record_type == "A" || var.route53_record_type == "AAAA"
+    error_message = "Route 53 record type must be A or AAAA"
+  }
+}
+
+variable "route53_record_alias_evaluate_target_health" {
+  description = "Whether to evaluate the health of the ALB for responding to Route 53 DNS queries"
+  type        = bool
+  default     = true
 }
