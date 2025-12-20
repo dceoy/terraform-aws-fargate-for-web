@@ -18,6 +18,12 @@ variable "public_subnet_ids" {
   type        = list(string)
 }
 
+variable "cloudfront_origin_custom_headers" {
+  description = "Custom headers to add to requests sent to the origin by CloudFront"
+  type        = map(string)
+  default     = {}
+}
+
 variable "lb_logs_s3_bucket_id" {
   description = "S3 bucket ID for ALB logs"
   type        = string

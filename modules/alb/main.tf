@@ -11,6 +11,7 @@ resource "aws_security_group" "alb" {
     protocol         = var.lb_security_group_ingress_protocol
     cidr_blocks      = var.lb_security_group_ingress_ipv4_cidr_blocks
     ipv6_cidr_blocks = var.lb_security_group_ingress_ipv6_cidr_blocks
+    prefix_list_ids  = local.lb_restrict_to_cloudfront ? [data.aws_ec2_managed_prefix_list.cloudfront.id] : null
   }
   egress {
     description      = "Allow all outbound traffic"
@@ -167,18 +168,29 @@ resource "aws_lb_listener" "app" {
   routing_http_request_x_amzn_tls_version_header_name                   = var.lb_listener_routing_http_request_x_amzn_tls_version_header_name
   routing_http_request_x_amzn_tls_cipher_suite_header_name              = var.lb_listener_routing_http_request_x_amzn_tls_cipher_suite_header_name
   default_action {
-    type  = "forward"
+    type  = local.lb_restrict_to_cloudfront ? "fixed-response" : "forward"
     order = 1
-    forward {
-      target_group {
-        arn    = aws_lb_target_group.app.arn
-        weight = 1
+    dynamic "fixed_response" {
+      for_each = local.lb_restrict_to_cloudfront ? [true] : []
+      content {
+        content_type = "text/plain"
+        message_body = "Forbidden"
+        status_code  = "403"
       }
-      dynamic "stickiness" {
-        for_each = length(var.lb_listener_stickiness) > 0 ? [true] : []
-        content {
-          duration = lookup(var.lb_listener_stickiness, "duration", null)
-          enabled  = lookup(var.lb_listener_stickiness, "enabled", null)
+    }
+    dynamic "forward" {
+      for_each = local.lb_restrict_to_cloudfront ? [] : [true]
+      content {
+        target_group {
+          arn    = aws_lb_target_group.app.arn
+          weight = 1
+        }
+        dynamic "stickiness" {
+          for_each = length(var.lb_listener_stickiness) > 0 ? [true] : []
+          content {
+            duration = lookup(var.lb_listener_stickiness, "duration", null)
+            enabled  = lookup(var.lb_listener_stickiness, "enabled", null)
+          }
         }
       }
     }
@@ -199,8 +211,39 @@ resource "aws_lb_listener" "app" {
   }
 }
 
+resource "aws_lb_listener_rule" "app" {
+  count        = local.lb_restrict_to_cloudfront ? 1 : 0
+  listener_arn = aws_lb_listener.app.arn
+  priority     = 1
+  action {
+    type = "forward"
+    forward {
+      target_group {
+        arn    = aws_lb_target_group.app.arn
+        weight = 1
+      }
+      dynamic "stickiness" {
+        for_each = length(var.lb_listener_stickiness) > 0 ? [true] : []
+        content {
+          duration = lookup(var.lb_listener_stickiness, "duration", null)
+          enabled  = lookup(var.lb_listener_stickiness, "enabled", null)
+        }
+      }
+    }
+  }
+  dynamic "condition" {
+    for_each = var.cloudfront_origin_custom_headers
+    content {
+      http_header {
+        http_header_name = condition.key
+        values           = [condition.value]
+      }
+    }
+  }
+}
+
 resource "aws_route53_record" "alb" {
-  count   = var.route53_record_zone_id != null ? 1 : 0
+  count   = var.route53_record_zone_id != null && (!local.lb_restrict_to_cloudfront) ? 1 : 0
   zone_id = var.route53_record_zone_id
   name    = var.route53_record_name
   type    = var.route53_record_type
