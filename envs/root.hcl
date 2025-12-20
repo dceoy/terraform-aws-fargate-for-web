@@ -195,4 +195,35 @@ inputs = {
   chatbot_slack_channel_id                           = get_env("BEDROCK_CHATBOT_SLACK_CHANNEL_ID")
   chatbot_guardrail_policy_arns                      = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
   chatbot_logging_level                              = "NONE"
+  wafv2_visibility_config_cloudwatch_metrics_enabled = true
+  wafv2_visibility_config_sampled_requests_enabled   = true
+  wafv2_aws_managed_rules = [
+    {
+      name            = "AWSManagedRulesCommonRuleSet"
+      override_action = "none"
+    },
+    {
+      name            = "AWSManagedRulesAmazonIpReputationList"
+      override_action = "none"
+    }
+  ]
+  cloudfront_function_runtime                            = "cloudfront-js-2.0"
+  cloudfront_function_publish                            = true
+  cloudfront_enabled                                     = true
+  cloudfront_is_ipv6_enabled                             = true
+  cloudfront_aliases                                     = []
+  cloudfront_http_version                                = "http2and3"
+  cloudfront_cache_behavior_viewer_protocol_policy       = "redirect-to-https"
+  cloudfront_price_class                                 = "PriceClass_100"
+  cloudfront_retain_on_delete                            = false
+  cloudfront_wait_for_deployment                         = true
+  cloudfront_staging                                     = false
+  cloudfront_origin_custom_headers                       = {}
+  cloudfront_ordered_cache_behavior_alb_path_pattern     = "/alb/*"
+  cloudfront_ordered_cache_behavior_lambda_path_pattern  = "/lambda/*"
+  cloudfront_ordered_cache_behavior_s3_path_pattern      = "/s3/*"
+  cloudfront_geo_restriction_type                        = "none"
+  cloudfront_geo_restriction_locations                   = []
+  cloudfront_viewer_certificate_minimum_protocol_version = "TLSv1"
+  cloudfront_realtime_metrics_subscription_status        = "Enabled"
 }
