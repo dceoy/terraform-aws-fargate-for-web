@@ -14,4 +14,5 @@ locals {
   cloudfront_disabled_cache_policy_id  = data.aws_cloudfront_cache_policy.disabled.id
   cloudfront_optimized_cache_policy_id = data.aws_cloudfront_cache_policy.optimized.id
   cloudfront_origin_request_policy_id  = data.aws_cloudfront_origin_request_policy.all.id
+  lambda_function_url_domain_name      = var.lambda_function_url != null ? trimprefix(var.lambda_function_url, "https://") : null
 }

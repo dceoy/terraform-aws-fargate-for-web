@@ -79,9 +79,10 @@ resource "aws_cloudfront_origin_access_control" "s3" {
   signing_protocol                  = "sigv4"
 }
 
+# trivy:ignore:AVD-AWS-0010
 resource "aws_cloudfront_distribution" "cdn" {
   aliases             = length(var.cloudfront_aliases) > 0 ? var.cloudfront_aliases : null
-  comment             = "CloudFront Distribution for ALB"
+  comment             = "CloudFront Distribution for ${join(", ", compact([var.alb_dns_name, local.lambda_function_url_domain_name, var.s3_bucket_regional_domain_name]))}"
   web_acl_id          = aws_wafv2_web_acl.cloudfront.arn
   http_version        = var.cloudfront_http_version
   default_root_object = var.cloudfront_default_root_object
@@ -112,10 +113,10 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   dynamic "origin" {
-    for_each = var.lambda_function_url != null ? [true] : []
+    for_each = local.lambda_function_url_domain_name != null ? [true] : []
     content {
       origin_id                = "lambda-origin"
-      domain_name              = replace(var.lambda_function_url, "https://", "")
+      domain_name              = local.lambda_function_url_domain_name
       origin_access_control_id = length(aws_cloudfront_origin_access_control.lambda) > 0 ? aws_cloudfront_origin_access_control.lambda[0].id : null
       custom_origin_config {
         http_port              = 80

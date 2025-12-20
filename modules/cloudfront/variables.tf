@@ -206,19 +206,19 @@ variable "cloudfront_realtime_metrics_subscription_status" {
 }
 
 variable "route53_record_zone_id" {
-  description = "Route 53 record hosted zone ID for the ALB"
+  description = "Route 53 record hosted zone ID for the CloudFront distribution"
   type        = string
   default     = null
 }
 
 variable "route53_record_name" {
-  description = "Route 53 record name for the ALB"
+  description = "Route 53 record name for the CloudFront distribution"
   type        = string
   default     = ""
 }
 
 variable "route53_record_type" {
-  description = "Route 53 record type for the ALB"
+  description = "Route 53 record type for the CloudFront distribution"
   type        = string
   default     = "A"
   validation {
@@ -228,7 +228,7 @@ variable "route53_record_type" {
 }
 
 variable "route53_record_alias_evaluate_target_health" {
-  description = "Whether to evaluate the health of the ALB for responding to Route 53 DNS queries"
+  description = "Whether to evaluate the health of the CloudFront distribution for responding to Route 53 DNS queries"
   type        = bool
   default     = true
 }
