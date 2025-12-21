@@ -6,8 +6,8 @@ variable "TAG" {
   default = "latest"
 }
 
-variable "PYTHON_VERSION" {
-  default = "3.13"
+variable "DEBIAN_VERSION" {
+  default = "12"
 }
 
 variable "USER_UID" {
@@ -33,7 +33,7 @@ target "streamlit" {
   target     = "app"
   platforms  = ["linux/arm64"]
   args = {
-    PYTHON_VERSION = PYTHON_VERSION
+    DEBIAN_VERSION = DEBIAN_VERSION
     USER_UID       = USER_UID
     USER_GID       = USER_GID
     USER_NAME      = USER_NAME

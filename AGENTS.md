@@ -14,9 +14,9 @@
 - `terragrunt run-all plan --working-dir='envs/dev/'` produces a speculative plan.
 - `terragrunt run-all apply --working-dir='envs/dev/' --non-interactive` applies infrastructure changes.
 - `terragrunt run-all destroy --working-dir='envs/dev/' --non-interactive` tears down dev resources.
-- `poetry install` installs Python dependencies for local development.
-- `poetry run streamlit run src/app.py` runs the app locally.
-- `poetry run ruff check src/` and `poetry run pyright src/` run linting and type checks.
+- `uv sync --extra dev` installs Python dependencies for local development.
+- `uv run streamlit run src/app.py` runs the app locally.
+- `uv run ruff check src/` and `uv run pyright src/` run linting and type checks.
 
 ## Coding Style & Naming Conventions
 
