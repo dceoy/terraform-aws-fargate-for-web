@@ -2,6 +2,7 @@ resource "aws_wafv2_web_acl" "cloudfront" {
   name_prefix = "${var.system_name}-${var.env_type}-wafv2-web-acl-"
   description = "WAFv2 Web ACL with AWS managed rules"
   scope       = "CLOUDFRONT"
+  region      = "us-east-1"
   default_action {
     allow {}
   }
@@ -62,7 +63,7 @@ resource "aws_cloudfront_function" "default" {
 }
 
 resource "aws_cloudfront_origin_access_control" "lambda" {
-  count                             = local.cloudfront_origin_domain_names["lambda"] != null && var.lambda_function_url_uses_iam_authentication ? 1 : 0
+  count                             = local.cloudfront_origin_domain_names["lambda"] != null && var.create_cloudfront_lambda_origin_access_control ? 1 : 0
   name                              = "${var.system_name}-${var.env_type}-lambda-cloudfront-oac"
   description                       = "CloudFront Origin Access Control for Lambda"
   origin_access_control_origin_type = "lambda"
@@ -82,7 +83,7 @@ resource "aws_cloudfront_origin_access_control" "s3" {
 # trivy:ignore:AVD-AWS-0010
 resource "aws_cloudfront_distribution" "cdn" {
   aliases             = length(var.cloudfront_aliases) > 0 ? var.cloudfront_aliases : null
-  comment             = "CloudFront Distribution for ${join(", ", compact(values(local.cloudfront_origin_domain_names)))}"
+  comment             = "CloudFront Distribution for ${upper(join(", ", [for k, v in local.cloudfront_origin_domain_names : k if v != null]))}"
   web_acl_id          = aws_wafv2_web_acl.cloudfront.arn
   http_version        = var.cloudfront_http_version
   default_root_object = var.cloudfront_default_root_object
@@ -156,7 +157,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   dynamic "ordered_cache_behavior" {
-    for_each = local.cloudfront_cache_behavior_path_patterns["alb"] != null && local.cloudfront_origin_ids["alb"] != local.cloudfront_default_cache_behavior_target_origin_id ? [true] : []
+    for_each = local.cloudfront_cache_behavior_path_patterns["alb"] != null && local.cloudfront_cache_behavior_path_patterns["alb"] != "/*" ? [true] : []
     content {
       path_pattern             = local.cloudfront_cache_behavior_path_patterns["alb"]
       target_origin_id         = local.cloudfront_origin_ids["alb"]
@@ -168,7 +169,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   dynamic "ordered_cache_behavior" {
-    for_each = local.cloudfront_cache_behavior_path_patterns["lambda"] != null && local.cloudfront_origin_ids["lambda"] != local.cloudfront_default_cache_behavior_target_origin_id ? [true] : []
+    for_each = local.cloudfront_cache_behavior_path_patterns["lambda"] != null && local.cloudfront_cache_behavior_path_patterns["lambda"] != "/*" ? [true] : []
     content {
       path_pattern             = local.cloudfront_cache_behavior_path_patterns["lambda"]
       target_origin_id         = local.cloudfront_origin_ids["lambda"]
@@ -180,7 +181,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   dynamic "ordered_cache_behavior" {
-    for_each = local.cloudfront_cache_behavior_path_patterns["s3"] != null && local.cloudfront_origin_ids["s3"] != local.cloudfront_default_cache_behavior_target_origin_id ? [true] : []
+    for_each = local.cloudfront_cache_behavior_path_patterns["s3"] != null && local.cloudfront_cache_behavior_path_patterns["s3"] != "/*" ? [true] : []
     content {
       path_pattern           = local.cloudfront_cache_behavior_path_patterns["s3"]
       target_origin_id       = local.cloudfront_origin_ids["s3"]
@@ -219,10 +220,11 @@ resource "aws_cloudfront_monitoring_subscription" "cdn" {
 }
 
 resource "aws_route53_record" "cloudfront" {
-  count   = var.route53_record_zone_id != null ? 1 : 0
-  zone_id = var.route53_record_zone_id
-  name    = var.route53_record_name
-  type    = var.route53_record_type
+  count           = var.route53_record_zone_id != null ? 1 : 0
+  zone_id         = var.route53_record_zone_id
+  name            = var.route53_record_name
+  type            = var.route53_record_type
+  allow_overwrite = var.route53_record_allow_overwrite
   alias {
     name                   = aws_cloudfront_distribution.cdn.domain_name
     zone_id                = aws_cloudfront_distribution.cdn.hosted_zone_id

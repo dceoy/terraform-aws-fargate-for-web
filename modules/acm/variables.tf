@@ -8,6 +8,12 @@ variable "env_type" {
   type        = string
 }
 
+variable "acm_certificate_region" {
+  description = "Region for the ACM certificate"
+  type        = string
+  default     = null
+}
+
 variable "acm_domain_name" {
   description = "Domain name for which the ACM certificate should be issued"
   type        = string
@@ -36,6 +42,12 @@ variable "acm_certificate_transparency_logging_preference" {
   default     = null
 }
 
+variable "acm_validation_timeout_create" {
+  description = "Timeout for the ACM certificate validation creation"
+  type        = string
+  default     = null
+}
+
 variable "route53_record_zone_id" {
   description = "Route 53 record hosted zone ID for the ALB"
   type        = string
@@ -48,8 +60,8 @@ variable "route53_record_ttl" {
   default     = 60
 }
 
-variable "acm_validation_timeout_create" {
-  description = "Timeout for the ACM certificate validation creation"
-  type        = string
-  default     = null
+variable "route53_record_allow_overwrite" {
+  description = "Whether to allow the Route 53 record to be overwritten"
+  type        = bool
+  default     = false
 }

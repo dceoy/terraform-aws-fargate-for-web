@@ -20,8 +20,8 @@ variable "lambda_function_url" {
   default     = null
 }
 
-variable "lambda_function_url_uses_iam_authentication" {
-  description = "Whether the Lambda function URL uses IAM authentication"
+variable "create_cloudfront_lambda_origin_access_control" {
+  description = "Whether to create a CloudFront Origin Access Control for the Lambda function URL"
   type        = bool
   default     = true
 }
@@ -153,6 +153,12 @@ variable "cloudfront_origin_custom_headers" {
   default     = {}
 }
 
+variable "cloudfront_origin_request_managed_policy_name" {
+  description = "Managed origin request policy name for CloudFront cache behaviors"
+  type        = string
+  default     = "Managed-AllViewerAndCloudFrontHeaders-2022-06"
+}
+
 variable "cloudfront_ordered_cache_behavior_alb_path_pattern" {
   description = "Path pattern of the CloudFront ordered cache behavior for the ALB origin"
   type        = string
@@ -225,6 +231,12 @@ variable "route53_record_type" {
     condition     = var.route53_record_type == "A" || var.route53_record_type == "AAAA"
     error_message = "Route 53 record type must be A or AAAA"
   }
+}
+
+variable "route53_record_allow_overwrite" {
+  description = "Whether to allow the Route 53 record to be overwritten"
+  type        = bool
+  default     = false
 }
 
 variable "route53_record_alias_evaluate_target_health" {

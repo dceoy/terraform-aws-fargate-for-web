@@ -6,8 +6,8 @@ data "aws_cloudfront_cache_policy" "optimized" {
   name = "Managed-CachingOptimized"
 }
 
-data "aws_cloudfront_origin_request_policy" "all" {
-  name = "Managed-AllViewerExceptHostHeader"
+data "aws_cloudfront_origin_request_policy" "managed" {
+  name = var.cloudfront_origin_request_managed_policy_name
 }
 
 locals {
@@ -16,10 +16,10 @@ locals {
     lambda = data.aws_cloudfront_cache_policy.disabled.id
     s3     = data.aws_cloudfront_cache_policy.optimized.id
   }
-  cloudfront_origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all.id
+  cloudfront_origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed.id
   cloudfront_origin_domain_names = {
     alb    = var.alb_dns_name
-    lambda = var.lambda_function_url != null ? trimprefix(var.lambda_function_url, "https://") : null
+    lambda = var.lambda_function_url != null ? regex("^https://([^/]+)", var.lambda_function_url)[0] : null
     s3     = var.s3_bucket_regional_domain_name
   }
   cloudfront_origin_ids = {
@@ -30,10 +30,8 @@ locals {
     lambda = local.cloudfront_origin_domain_names["lambda"] != null ? var.cloudfront_ordered_cache_behavior_lambda_path_pattern : null
     s3     = local.cloudfront_origin_domain_names["s3"] != null ? var.cloudfront_ordered_cache_behavior_s3_path_pattern : null
   }
-  cloudfront_default_cache_behavior_target_origin_id = one(
-    concat(
-      [for k, v in local.cloudfront_cache_behavior_path_patterns : local.cloudfront_origin_ids[k] if v == "/*"],
-      values(local.cloudfront_origin_ids)
-    )
+  cloudfront_default_cache_behavior_target_origin_id = coalesce(
+    one([for k, v in local.cloudfront_cache_behavior_path_patterns : local.cloudfront_origin_ids[k] if v == "/*"]),
+    values(local.cloudfront_origin_ids)[0]
   )
 }

@@ -1,12 +1,10 @@
-terraform-aws-fargate-for-web
-=============================
+# terraform-aws-fargate-for-web
 
 Terraform modules of AWS Fargate for web application
 
 [![CI/CD](https://github.com/dceoy/terraform-aws-fargate-for-web/actions/workflows/ci.yml/badge.svg)](https://github.com/dceoy/terraform-aws-fargate-for-web/actions/workflows/ci.yml)
 
-Installation
-------------
+## Installation
 
 1.  Check out the repository.
 
@@ -43,8 +41,7 @@ Installation
     $ terragrunt run-all apply --working-dir='envs/dev/' --non-interactive
     ```
 
-Cleanup
--------
+## Cleanup
 
 ```sh
 $ terragrunt run-all destroy --working-dir='envs/dev/' --non-interactive
