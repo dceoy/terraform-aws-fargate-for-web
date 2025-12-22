@@ -153,28 +153,46 @@ variable "cloudfront_origin_custom_headers" {
   default     = {}
 }
 
-variable "cloudfront_origin_request_managed_policy_name" {
-  description = "Managed origin request policy name for CloudFront cache behaviors"
-  type        = string
-  default     = "Managed-AllViewerAndCloudFrontHeaders-2022-06"
+variable "cloudfront_cache_behavior_cache_policy_names" {
+  description = "Cache policy names attached to the CloudFront cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "Managed-CachingDisabled"
+    lambda = "Managed-CachingDisabled"
+    s3     = "Managed-CachingOptimized"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_cache_policy_names), ["alb", "lambda", "s3"])) == 0
+    error_message = "Cache policy name keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
-variable "cloudfront_ordered_cache_behavior_alb_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the ALB origin"
-  type        = string
-  default     = "/alb/*"
+variable "cloudfront_cache_behavior_origin_request_policy_names" {
+  description = "Origin request policy names attached to the CloudFront cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "Managed-AllViewerExceptHostHeader"
+    lambda = "Managed-AllViewerExceptHostHeader"
+    s3     = "Managed-CORS-S3Origin"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_origin_request_policy_names), ["alb", "lambda", "s3"])) == 0
+    error_message = "Origin request policy name keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
-variable "cloudfront_ordered_cache_behavior_lambda_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the Lambda function URL origin"
-  type        = string
-  default     = "/lambda/*"
-}
-
-variable "cloudfront_ordered_cache_behavior_s3_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the S3 origin"
-  type        = string
-  default     = "/s3/*"
+variable "cloudfront_cache_behavior_path_patterns" {
+  description = "Path patterns applied to the CloudFront ordered cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "/alb/*"
+    lambda = "/lambda/*"
+    s3     = "/s3/*"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_path_patterns), ["alb", "lambda", "s3"])) == 0
+    error_message = "Path pattern keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
 variable "cloudfront_geo_restriction_type" {

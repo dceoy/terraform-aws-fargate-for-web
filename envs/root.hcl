@@ -223,10 +223,21 @@ inputs = {
   cloudfront_origin_custom_headers = {
     X-Container-Image-Primary-Tag = local.docker_image_primary_tag
   }
-  cloudfront_origin_request_managed_policy_name          = "Managed-AllViewerAndCloudFrontHeaders-2022-06"
-  cloudfront_ordered_cache_behavior_alb_path_pattern     = "/alb/*"
-  cloudfront_ordered_cache_behavior_lambda_path_pattern  = "/lambda/*"
-  cloudfront_ordered_cache_behavior_s3_path_pattern      = "/s3/*"
+  cloudfront_cache_behavior_cache_policy_names = {
+    alb    = "Managed-CachingDisabled"
+    lambda = "Managed-CachingDisabled"
+    s3     = "Managed-CachingOptimized"
+  }
+  cloudfront_cache_behavior_origin_request_policy_names = {
+    alb    = "Managed-AllViewerExceptHostHeader"
+    lambda = "Managed-AllViewerExceptHostHeader"
+    s3     = "Managed-CORS-S3Origin"
+  }
+  cloudfront_cache_behavior_path_patterns = {
+    alb    = "/alb/*"
+    lambda = "/lambda/*"
+    s3     = "/s3/*"
+  }
   cloudfront_geo_restriction_type                        = "none"
   cloudfront_geo_restriction_locations                   = []
   cloudfront_viewer_certificate_minimum_protocol_version = "TLSv1"

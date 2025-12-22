@@ -8,19 +8,34 @@ output "wafv2_web_acl_id" {
   value       = aws_wafv2_web_acl.cloudfront.id
 }
 
-output "cloudfront_default_behavior_function_arn" {
-  description = "ARN of the CloudFront function used for the default behavior"
-  value       = aws_cloudfront_function.default.arn
+output "cloudfront_block_function_arn" {
+  description = "ARN of the CloudFront function used to block requests"
+  value       = aws_cloudfront_function.block.arn
 }
 
-output "cloudfront_default_behavior_function_etag" {
-  description = "ETag of the CloudFront function used for the default behavior"
-  value       = aws_cloudfront_function.default.etag
+output "cloudfront_block_function_etag" {
+  description = "ETag of the CloudFront function used to block requests"
+  value       = aws_cloudfront_function.block.etag
 }
 
-output "cloudfront_default_behavior_function_live_stage_etag" {
-  description = "Live stage ETag of the CloudFront function used for the default behavior"
-  value       = aws_cloudfront_function.default.live_stage_etag
+output "cloudfront_block_function_live_stage_etag" {
+  description = "Live stage ETag of the CloudFront function used to block requests"
+  value       = aws_cloudfront_function.block.live_stage_etag
+}
+
+output "cloudfront_forward_function_arn" {
+  description = "ARN of the CloudFront function used to add X-Forwarded-Host header"
+  value       = aws_cloudfront_function.forward.arn
+}
+
+output "cloudfront_forward_function_etag" {
+  description = "ETag of the CloudFront function used to add X-Forwarded-Host header"
+  value       = aws_cloudfront_function.forward.etag
+}
+
+output "cloudfront_forward_function_live_stage_etag" {
+  description = "Live stage ETag of the CloudFront function used to add X-Forwarded-Host header"
+  value       = aws_cloudfront_function.forward.live_stage_etag
 }
 
 output "cloudfront_s3_origin_access_control_id" {
