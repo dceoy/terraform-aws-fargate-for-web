@@ -470,6 +470,12 @@ variable "route53_record_type" {
   }
 }
 
+variable "route53_record_allow_overwrite" {
+  description = "Whether to allow the Route 53 record to be overwritten"
+  type        = bool
+  default     = false
+}
+
 variable "route53_record_alias_evaluate_target_health" {
   description = "Whether to evaluate the health of the ALB for responding to Route 53 DNS queries"
   type        = bool

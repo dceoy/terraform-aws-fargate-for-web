@@ -20,10 +20,10 @@ variable "lambda_function_url" {
   default     = null
 }
 
-variable "lambda_function_url_uses_iam_authentication" {
-  description = "Whether the Lambda function URL uses IAM authentication"
-  type        = bool
-  default     = true
+variable "lambda_function_name_with_iam_authorization" {
+  description = "Function name of the Lambda function URL with AWS_IAM authorization used as a CloudFront origin"
+  type        = string
+  default     = null
 }
 
 variable "s3_bucket_regional_domain_name" {
@@ -153,22 +153,46 @@ variable "cloudfront_origin_custom_headers" {
   default     = {}
 }
 
-variable "cloudfront_ordered_cache_behavior_alb_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the ALB origin"
-  type        = string
-  default     = "/alb/*"
+variable "cloudfront_cache_behavior_cache_policy_names" {
+  description = "Cache policy names attached to the CloudFront cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "Managed-CachingDisabled"
+    lambda = "Managed-CachingDisabled"
+    s3     = "Managed-CachingOptimized"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_cache_policy_names), ["alb", "lambda", "s3"])) == 0
+    error_message = "Cache policy name keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
-variable "cloudfront_ordered_cache_behavior_lambda_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the Lambda function URL origin"
-  type        = string
-  default     = "/lambda/*"
+variable "cloudfront_cache_behavior_origin_request_policy_names" {
+  description = "Origin request policy names attached to the CloudFront cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "Managed-AllViewerExceptHostHeader"
+    lambda = "Managed-AllViewerExceptHostHeader"
+    s3     = "Managed-CORS-S3Origin"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_origin_request_policy_names), ["alb", "lambda", "s3"])) == 0
+    error_message = "Origin request policy name keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
-variable "cloudfront_ordered_cache_behavior_s3_path_pattern" {
-  description = "Path pattern of the CloudFront ordered cache behavior for the S3 origin"
-  type        = string
-  default     = "/s3/*"
+variable "cloudfront_cache_behavior_path_patterns" {
+  description = "Path patterns applied to the CloudFront ordered cache behaviors"
+  type        = map(string)
+  default = {
+    alb    = "/alb/*"
+    lambda = "/lambda/*"
+    s3     = "/s3/*"
+  }
+  validation {
+    condition     = length(setsubtract(keys(var.cloudfront_cache_behavior_path_patterns), ["alb", "lambda", "s3"])) == 0
+    error_message = "Path pattern keys must be one of 'alb', 'lambda', or 's3'"
+  }
 }
 
 variable "cloudfront_geo_restriction_type" {
@@ -225,6 +249,12 @@ variable "route53_record_type" {
     condition     = var.route53_record_type == "A" || var.route53_record_type == "AAAA"
     error_message = "Route 53 record type must be A or AAAA"
   }
+}
+
+variable "route53_record_allow_overwrite" {
+  description = "Whether to allow the Route 53 record to be overwritten"
+  type        = bool
+  default     = false
 }
 
 variable "route53_record_alias_evaluate_target_health" {

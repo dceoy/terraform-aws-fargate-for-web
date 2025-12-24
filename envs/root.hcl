@@ -6,7 +6,6 @@ locals {
     "ARM64"  = "linux/arm64"
   }
   lb_target_group_port     = 8501
-  lb_listener_port         = 80
   repo_root                = get_repo_root()
   env_vars                 = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   ecr_address              = "${local.env_vars.locals.account_id}.dkr.ecr.${local.env_vars.locals.region}.amazonaws.com"
@@ -124,6 +123,7 @@ inputs = {
   ecs_task_iam_role_policy_arns                     = []
   ecs_task_container_definitions_template_file_path = find_in_parent_folders("ecs-task-container-definitions.json.tpl")
   ecs_task_container_restart_attempt_period         = 180
+  acm_certificate_region                            = "us-east-1"
   lb_security_group_ingress_from_port               = 0
   lb_security_group_ingress_to_port                 = 0
   lb_security_group_ingress_protocol                = "-1"
@@ -131,7 +131,7 @@ inputs = {
   lb_security_group_ingress_ipv6_cidr_blocks        = ["::/0"]
   lb_client_keep_alive                              = 3600
   lb_desync_mitigation_mode                         = "defensive"
-  lb_enable_delete_protection                       = false
+  lb_enable_deletion_protection                     = false
   lb_enable_http2                                   = true
   lb_enable_tls_version_and_cipher_suite_headers    = false
   lb_enable_xff_client_port                         = false
@@ -165,7 +165,7 @@ inputs = {
   }
   lb_target_group_health_dns_failover                = {}
   lb_target_group_health_unhealthy_state_routing     = {}
-  lb_listener_port                                   = local.lb_listener_port
+  lb_listener_port                                   = 80
   lb_listener_protocol                               = "HTTP"
   lb_listener_ssl_policy                             = "ELBSecurityPolicy-2016-08"
   lb_listener_mutual_authentication                  = {}
@@ -223,9 +223,21 @@ inputs = {
   cloudfront_origin_custom_headers = {
     X-Container-Image-Primary-Tag = local.docker_image_primary_tag
   }
-  cloudfront_ordered_cache_behavior_alb_path_pattern     = "/alb/*"
-  cloudfront_ordered_cache_behavior_lambda_path_pattern  = "/lambda/*"
-  cloudfront_ordered_cache_behavior_s3_path_pattern      = "/s3/*"
+  cloudfront_cache_behavior_cache_policy_names = {
+    alb    = "Managed-CachingDisabled"
+    lambda = "Managed-CachingDisabled"
+    s3     = "Managed-CachingOptimized"
+  }
+  cloudfront_cache_behavior_origin_request_policy_names = {
+    alb    = "Managed-AllViewerExceptHostHeader"
+    lambda = "Managed-AllViewerExceptHostHeader"
+    s3     = "Managed-CORS-S3Origin"
+  }
+  cloudfront_cache_behavior_path_patterns = {
+    alb    = "/alb/*"
+    lambda = "/lambda/*"
+    s3     = "/s3/*"
+  }
   cloudfront_geo_restriction_type                        = "none"
   cloudfront_geo_restriction_locations                   = []
   cloudfront_viewer_certificate_minimum_protocol_version = "TLSv1"

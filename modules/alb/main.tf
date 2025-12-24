@@ -167,29 +167,32 @@ resource "aws_lb_listener" "app" {
   routing_http_request_x_amzn_mtls_clientcert_header_name               = var.lb_listener_routing_http_request_x_amzn_mtls_clientcert_header_name
   routing_http_request_x_amzn_tls_version_header_name                   = var.lb_listener_routing_http_request_x_amzn_tls_version_header_name
   routing_http_request_x_amzn_tls_cipher_suite_header_name              = var.lb_listener_routing_http_request_x_amzn_tls_cipher_suite_header_name
-  default_action {
-    type  = local.lb_restrict_to_cloudfront ? "fixed-response" : "forward"
-    order = 1
-    dynamic "fixed_response" {
-      for_each = local.lb_restrict_to_cloudfront ? [true] : []
-      content {
-        content_type = "text/plain"
-        message_body = "Forbidden"
-        status_code  = "403"
-      }
-    }
-    dynamic "forward" {
-      for_each = local.lb_restrict_to_cloudfront ? [] : [true]
-      content {
-        target_group {
-          arn    = aws_lb_target_group.app.arn
-          weight = 1
+  dynamic "default_action" {
+    for_each = local.lb_restrict_to_cloudfront ? ["fixed-response"] : ["forward"]
+    content {
+      type  = default_action.value
+      order = 1
+      dynamic "fixed_response" {
+        for_each = default_action.value == "fixed-response" ? [true] : []
+        content {
+          content_type = "text/plain"
+          message_body = "Forbidden"
+          status_code  = "403"
         }
-        dynamic "stickiness" {
-          for_each = length(var.lb_listener_stickiness) > 0 ? [true] : []
-          content {
-            duration = lookup(var.lb_listener_stickiness, "duration", null)
-            enabled  = lookup(var.lb_listener_stickiness, "enabled", null)
+      }
+      dynamic "forward" {
+        for_each = default_action.value == "forward" ? [true] : []
+        content {
+          target_group {
+            arn    = aws_lb_target_group.app.arn
+            weight = 1
+          }
+          dynamic "stickiness" {
+            for_each = length(var.lb_listener_stickiness) > 0 ? [true] : []
+            content {
+              duration = lookup(var.lb_listener_stickiness, "duration", null)
+              enabled  = lookup(var.lb_listener_stickiness, "enabled", null)
+            }
           }
         }
       }
@@ -243,10 +246,11 @@ resource "aws_lb_listener_rule" "app" {
 }
 
 resource "aws_route53_record" "alb" {
-  count   = var.route53_record_zone_id != null && (!local.lb_restrict_to_cloudfront) ? 1 : 0
-  zone_id = var.route53_record_zone_id
-  name    = var.route53_record_name
-  type    = var.route53_record_type
+  count           = var.route53_record_zone_id != null && (!local.lb_restrict_to_cloudfront) ? 1 : 0
+  zone_id         = var.route53_record_zone_id
+  name            = var.route53_record_name
+  type            = var.route53_record_type
+  allow_overwrite = var.route53_record_allow_overwrite
   alias {
     name                   = aws_lb.app.dns_name
     zone_id                = aws_lb.app.zone_id
