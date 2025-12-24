@@ -77,7 +77,7 @@ resource "aws_cloudfront_function" "forward" {
 }
 
 resource "aws_cloudfront_origin_access_control" "lambda" {
-  count                             = contains(keys(local.cloudfront_origin_ids), "lambda") && var.create_cloudfront_lambda_origin_access_control ? 1 : 0
+  count                             = contains(keys(local.cloudfront_origin_ids), "lambda") && var.lambda_function_name_with_iam_authorization != null ? 1 : 0
   name                              = "${var.system_name}-${var.env_type}-lambda-cloudfront-oac"
   description                       = "CloudFront Origin Access Control for Lambda"
   origin_access_control_origin_type = "lambda"
@@ -213,6 +213,16 @@ resource "aws_cloudfront_monitoring_subscription" "cdn" {
       realtime_metrics_subscription_status = var.cloudfront_realtime_metrics_subscription_status
     }
   }
+}
+
+resource "aws_lambda_permission" "cloudfront" {
+  for_each               = toset(length(aws_cloudfront_origin_access_control.lambda) > 0 ? ["InvokeFunctionUrl", "InvokeFunction"] : [])
+  statement_id_prefix    = "${aws_cloudfront_distribution.cdn.id}-"
+  action                 = "lambda:${each.key}"
+  function_name          = var.lambda_function_name_with_iam_authorization
+  principal              = "cloudfront.amazonaws.com"
+  source_arn             = aws_cloudfront_distribution.cdn.arn
+  function_url_auth_type = "AWS_IAM"
 }
 
 resource "aws_route53_record" "cloudfront" {

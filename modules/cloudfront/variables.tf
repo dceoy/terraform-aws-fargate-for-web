@@ -20,10 +20,10 @@ variable "lambda_function_url" {
   default     = null
 }
 
-variable "create_cloudfront_lambda_origin_access_control" {
-  description = "Whether to create a CloudFront Origin Access Control for the Lambda function URL"
-  type        = bool
-  default     = true
+variable "lambda_function_name_with_iam_authorization" {
+  description = "Function name of the Lambda function URL with AWS_IAM authorization used as a CloudFront origin"
+  type        = string
+  default     = null
 }
 
 variable "s3_bucket_regional_domain_name" {
