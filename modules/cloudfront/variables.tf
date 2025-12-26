@@ -51,7 +51,7 @@ variable "wafv2_aws_managed_rule_group_names" {
 }
 
 variable "wafv2_aws_managed_rule_group_rule_action_override_actions" {
-  description = "Rule action overrides for AWS managed rules in the WAFv2 Web ACL (key: rule group name, value: list of rule action overrides)"
+  description = "Rule action overrides for AWS managed rules in the WAFv2 Web ACL (key: rule group name, value: map of rule names to their override actions)"
   type        = map(map(string))
   default     = {}
   validation {
