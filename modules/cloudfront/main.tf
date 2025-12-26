@@ -7,29 +7,57 @@ resource "aws_wafv2_web_acl" "cloudfront" {
     allow {}
   }
   dynamic "rule" {
-    for_each = { for i, r in var.wafv2_aws_managed_rules : i => r }
+    for_each = { for i, g in var.wafv2_aws_managed_rule_group_names : i => g }
     content {
-      name     = rule.value.name
+      name     = rule.value
       priority = rule.key
       statement {
         managed_rule_group_statement {
-          name        = rule.value.name
+          name        = rule.value
           vendor_name = "AWS"
+          dynamic "rule_action_override" {
+            for_each = lookup(var.wafv2_aws_managed_rule_group_rule_action_override_actions, rule.value, {})
+            content {
+              name = rule_action_override.key
+              action_to_use {
+                dynamic "allow" {
+                  for_each = rule_action_override.value == "allow" ? [true] : []
+                  content {}
+                }
+                dynamic "block" {
+                  for_each = rule_action_override.value == "block" ? [true] : []
+                  content {}
+                }
+                dynamic "count" {
+                  for_each = rule_action_override.value == "count" ? [true] : []
+                  content {}
+                }
+                dynamic "captcha" {
+                  for_each = rule_action_override.value == "captcha" ? [true] : []
+                  content {}
+                }
+                dynamic "challenge" {
+                  for_each = rule_action_override.value == "challenge" ? [true] : []
+                  content {}
+                }
+              }
+            }
+          }
         }
       }
       override_action {
         dynamic "none" {
-          for_each = rule.value.override_action == "none" ? [true] : []
+          for_each = lookup(var.wafv2_aws_managed_rule_group_override_action, rule.value, "none") == "none" ? [true] : []
           content {}
         }
         dynamic "count" {
-          for_each = rule.value.override_action == "count" ? [true] : []
+          for_each = lookup(var.wafv2_aws_managed_rule_group_override_action, rule.value, "none") == "count" ? [true] : []
           content {}
         }
       }
       visibility_config {
         cloudwatch_metrics_enabled = var.wafv2_visibility_config_cloudwatch_metrics_enabled
-        metric_name                = rule.value.name
+        metric_name                = rule.value
         sampled_requests_enabled   = var.wafv2_visibility_config_sampled_requests_enabled
       }
     }
