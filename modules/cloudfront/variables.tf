@@ -44,19 +44,34 @@ variable "wafv2_visibility_config_sampled_requests_enabled" {
   default     = true
 }
 
-variable "wafv2_aws_managed_rules" {
+variable "wafv2_aws_managed_rule_group_names" {
   description = "List of AWS managed rules to include in the WAFv2 Web ACL"
-  type        = list(map(string))
-  default = [
-    {
-      name            = "AWSManagedRulesCommonRuleSet"
-      override_action = "none"
-    },
-    {
-      name            = "AWSManagedRulesAmazonIpReputationList"
-      override_action = "none"
-    }
-  ]
+  type        = list(string)
+  default     = ["AWSManagedRulesCommonRuleSet", "AWSManagedRulesAmazonIpReputationList"]
+}
+
+variable "wafv2_aws_managed_rule_group_rule_action_override_actions" {
+  description = "Rule action overrides for AWS managed rules in the WAFv2 Web ACL (key: rule group name, value: list of rule action overrides)"
+  type        = map(map(string))
+  default     = {}
+  validation {
+    condition = alltrue([
+      for g in values(var.wafv2_aws_managed_rule_group_rule_action_override_actions) : alltrue([
+        for a in values(g) : contains(["allow", "block", "captcha", "challenge", "count"], a)
+      ])
+    ])
+    error_message = "Rule action override values must be one of allow, block, captcha, challenge, or count"
+  }
+}
+
+variable "wafv2_aws_managed_rule_group_override_action" {
+  description = "Override action for AWS managed rules in the WAFv2 Web ACL (key: rule group name, value: override action)"
+  type        = map(string)
+  default     = {}
+  validation {
+    condition     = alltrue([for v in values(var.wafv2_aws_managed_rule_group_override_action) : contains(["none", "count"], v)])
+    error_message = "Override action values must be one of none or count"
+  }
 }
 
 variable "cloudfront_function_runtime" {
