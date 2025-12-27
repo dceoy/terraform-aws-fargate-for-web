@@ -95,7 +95,7 @@ output "cloudfront_log_delivery_source_arn" {
 
 output "cloudfront_log_delivery_arn" {
   description = "CloudWatch Logs delivery ARN for CloudFront standard logging (v2)"
-  value       = length(aws_cloudwatch_log_delivery_destination.cloudfront) > 0 ? aws_cloudwatch_log_delivery.cloudfront[0].arn : null
+  value       = length(aws_cloudwatch_log_delivery.cloudfront) > 0 ? aws_cloudwatch_log_delivery.cloudfront[0].arn : null
 }
 
 output "cloudfront_route53_record_name" {
