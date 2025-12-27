@@ -9,6 +9,7 @@ data "aws_cloudfront_origin_request_policy" "all" {
 }
 
 locals {
+  cloudfront_region = "us-east-1"
   cloudfront_cache_behavior_allowed_methods = {
     alb    = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     lambda = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
