@@ -2,7 +2,7 @@ resource "aws_wafv2_web_acl" "cloudfront" {
   name_prefix = "${var.system_name}-${var.env_type}-wafv2-web-acl-"
   description = "WAFv2 Web ACL with AWS managed rules"
   scope       = "CLOUDFRONT"
-  region      = "us-east-1"
+  region      = local.cloudfront_region
   default_action {
     allow {}
   }
@@ -240,6 +240,54 @@ resource "aws_cloudfront_monitoring_subscription" "cdn" {
     realtime_metrics_subscription_config {
       realtime_metrics_subscription_status = var.cloudfront_realtime_metrics_subscription_status
     }
+  }
+}
+
+resource "aws_cloudwatch_log_delivery_destination" "cloudfront" {
+  count         = var.cloudfront_log_delivery_destination_resource_arn != null ? 1 : 0
+  name          = "${var.system_name}-${var.env_type}-cloudfront-log-delivery-destination"
+  region        = local.cloudfront_region
+  output_format = var.cloudfront_log_delivery_destination_output_format
+  delivery_destination_configuration {
+    destination_resource_arn = var.cloudfront_log_delivery_destination_resource_arn
+  }
+  tags = {
+    Name       = "${var.system_name}-${var.env_type}-cloudfront-log-delivery-destination"
+    SystemName = var.system_name
+    EnvType    = var.env_type
+  }
+}
+
+resource "aws_cloudwatch_log_delivery_source" "cloudfront" {
+  count        = length(aws_cloudwatch_log_delivery_destination.cloudfront) > 0 ? 1 : 0
+  name         = "${var.system_name}-${var.env_type}-cloudfront-log-delivery-source"
+  region       = local.cloudfront_region
+  log_type     = "ACCESS_LOGS"
+  resource_arn = aws_cloudfront_distribution.cdn.arn
+  tags = {
+    Name       = "${var.system_name}-${var.env_type}-cloudfront-log-delivery-source"
+    SystemName = var.system_name
+    EnvType    = var.env_type
+  }
+}
+
+resource "aws_cloudwatch_log_delivery" "cloudfront" {
+  count                    = length(aws_cloudwatch_log_delivery_destination.cloudfront) > 0 ? 1 : 0
+  region                   = local.cloudfront_region
+  delivery_source_name     = aws_cloudwatch_log_delivery_source.cloudfront[0].name
+  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.cloudfront[0].arn
+  record_fields            = var.cloudfront_log_delivery_record_fields
+  dynamic "s3_delivery_configuration" {
+    for_each = var.cloudfront_log_delivery_s3_enable_hive_compatible_path != null || var.cloudfront_log_delivery_s3_suffix_path != null ? [true] : []
+    content {
+      enable_hive_compatible_path = var.cloudfront_log_delivery_s3_enable_hive_compatible_path
+      suffix_path                 = var.cloudfront_log_delivery_s3_suffix_path
+    }
+  }
+  tags = {
+    Name       = "${var.system_name}-${var.env_type}-cloudfront-log-delivery"
+    SystemName = var.system_name
+    EnvType    = var.env_type
   }
 }
 

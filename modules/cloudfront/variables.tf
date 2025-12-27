@@ -244,6 +244,40 @@ variable "cloudfront_realtime_metrics_subscription_status" {
   default     = "Enabled"
 }
 
+variable "cloudfront_log_delivery_destination_resource_arn" {
+  description = "ARN of the delivery destination for CloudFront standard logging (v2)"
+  type        = string
+  default     = null
+}
+
+variable "cloudfront_log_delivery_destination_output_format" {
+  description = "Format of the logs sent to the delivery destination for CloudFront standard logging (v2)"
+  type        = string
+  default     = "parquet"
+  validation {
+    condition     = contains(["json", "plain", "w3c", "raw", "parquet"], var.cloudfront_log_delivery_destination_output_format)
+    error_message = "Output format must be one of json, plain, w3c, raw, or parquet"
+  }
+}
+
+variable "cloudfront_log_delivery_record_fields" {
+  description = "List of record fields to be delivered to the delivery destination for CloudFront standard logging (v2)"
+  type        = list(string)
+  default     = null
+}
+
+variable "cloudfront_log_delivery_s3_enable_hive_compatible_path" {
+  description = "Whether to enable Apache Hive compatible prefix structure for CloudFront standard logging (v2) S3 delivery"
+  type        = bool
+  default     = null
+}
+
+variable "cloudfront_log_delivery_s3_suffix_path" {
+  description = "S3 object suffix path for CloudFront standard logging (v2) S3 delivery"
+  type        = string
+  default     = null
+}
+
 variable "route53_record_zone_id" {
   description = "Route 53 record hosted zone ID for the CloudFront distribution"
   type        = string

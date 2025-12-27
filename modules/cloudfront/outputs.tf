@@ -83,6 +83,21 @@ output "cloudfront_monitoring_subscription_id" {
   value       = aws_cloudfront_monitoring_subscription.cdn.id
 }
 
+output "cloudfront_log_delivery_destination_arn" {
+  description = "CloudWatch Logs delivery destination ARN for CloudFront standard logging (v2)"
+  value       = length(aws_cloudwatch_log_delivery_destination.cloudfront) > 0 ? aws_cloudwatch_log_delivery_destination.cloudfront[0].arn : null
+}
+
+output "cloudfront_log_delivery_source_arn" {
+  description = "CloudWatch Logs delivery source ARN for CloudFront standard logging (v2)"
+  value       = length(aws_cloudwatch_log_delivery_source.cloudfront) > 0 ? aws_cloudwatch_log_delivery_source.cloudfront[0].arn : null
+}
+
+output "cloudfront_log_delivery_arn" {
+  description = "CloudWatch Logs delivery ARN for CloudFront standard logging (v2)"
+  value       = length(aws_cloudwatch_log_delivery.cloudfront) > 0 ? aws_cloudwatch_log_delivery.cloudfront[0].arn : null
+}
+
 output "cloudfront_route53_record_name" {
   description = "CloudFront Route 53 record name"
   value       = length(aws_route53_record.cloudfront) > 0 ? aws_route53_record.cloudfront[0].name : null
