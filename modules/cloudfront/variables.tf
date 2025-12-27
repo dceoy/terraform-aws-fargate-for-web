@@ -245,7 +245,7 @@ variable "cloudfront_realtime_metrics_subscription_status" {
 }
 
 variable "cloudfront_log_delivery_destination_resource_arn" {
-  description = "ARN of the the delivery destination for CloudFront standard logging (v2)"
+  description = "ARN of the delivery destination for CloudFront standard logging (v2)"
   type        = string
   default     = null
 }
