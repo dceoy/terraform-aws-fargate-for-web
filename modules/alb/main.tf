@@ -1,6 +1,7 @@
 # trivy:ignore:AVD-AWS-0104
 # trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "alb" {
+  # checkov:skip=CKV_AWS_382: ALB egress is intentionally open
   name        = "${var.system_name}-${var.env_type}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
@@ -33,6 +34,7 @@ resource "aws_security_group" "alb" {
 
 # trivy:ignore:AVD-AWS-0053
 resource "aws_lb" "app" {
+  # checkov:skip=CKV_AWS_150: Deletion protection is configurable via variable
   name                                        = local.lb_name
   internal                                    = false
   load_balancer_type                          = "application"
@@ -143,6 +145,7 @@ resource "aws_lb_target_group" "app" {
 
 # trivy:ignore:AVD-AWS-0054
 resource "aws_lb_listener" "app" {
+  # checkov:skip=CKV_AWS_2: Listener protocol is configured via variables
   load_balancer_arn                                                     = aws_lb.app.arn
   port                                                                  = var.lb_listener_port
   protocol                                                              = var.lb_listener_protocol

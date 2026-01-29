@@ -1,4 +1,5 @@
 resource "aws_wafv2_web_acl" "cloudfront" {
+  # checkov:skip=CKV_AWS_192: Managed rule groups are configurable for this ACL
   name_prefix = "${var.system_name}-${var.env_type}-wafv2-web-acl-"
   description = "WAFv2 Web ACL with AWS managed rules"
   scope       = "CLOUDFRONT"
@@ -124,6 +125,10 @@ resource "aws_cloudfront_origin_access_control" "s3" {
 
 # trivy:ignore:AVD-AWS-0010
 resource "aws_cloudfront_distribution" "cdn" {
+  # checkov:skip=CKV_AWS_86: Logging is optional and managed via log delivery resources
+  # checkov:skip=CKV_AWS_174: TLS minimum protocol version is configurable via variables
+  # checkov:skip=CKV_AWS_310: Origin failover is not required for this single-origin setup
+  # checkov:skip=CKV_AWS_374: Geo restriction is configurable via variables
   aliases             = length(var.cloudfront_aliases) > 0 ? var.cloudfront_aliases : null
   comment             = "CloudFront Distribution for ${upper(join(", ", keys(local.cloudfront_origin_domain_names)))}"
   web_acl_id          = aws_wafv2_web_acl.cloudfront.arn
