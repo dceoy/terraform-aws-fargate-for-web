@@ -7,7 +7,8 @@ dependency "alb" {
   mock_outputs = {
     lb_dns_name = "internal-lb-12345678.us-east-1.elb.amazonaws.com"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 dependency "acm" {
@@ -15,7 +16,8 @@ dependency "acm" {
   mock_outputs = {
     acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 inputs = {

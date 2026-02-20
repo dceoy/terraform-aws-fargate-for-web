@@ -7,7 +7,8 @@ dependency "vpc" {
   mock_outputs = {
     vpc_id = "vpc-12345678"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 dependency "subnet" {
@@ -15,7 +16,8 @@ dependency "subnet" {
   mock_outputs = {
     private_subnet_ids = ["subnet-23456789", "subnet-98765432"]
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 dependency "ecscluster" {
@@ -23,7 +25,8 @@ dependency "ecscluster" {
   mock_outputs = {
     ecs_cluster_id = "cluster-12345678"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 dependency "ecstask" {
@@ -31,7 +34,8 @@ dependency "ecstask" {
   mock_outputs = {
     ecs_task_definition_arn = "arn:aws:ecs:us-west-2:123456789012:task-definition/task-12345678"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 dependency "alb" {
@@ -40,7 +44,8 @@ dependency "alb" {
     lb_security_group_id = "sg-12345678"
     lb_target_group_arn  = "arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/target-12345678"
   }
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 inputs = {
