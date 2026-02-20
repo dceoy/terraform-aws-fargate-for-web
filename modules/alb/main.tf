@@ -1,7 +1,7 @@
 # trivy:ignore:AVD-AWS-0104
 # trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "alb" {
-  # checkov:skip=CKV_AWS_382: ALB egress is intentionally open
+  # checkov:skip=CKV_AWS_382:ALB egress is intentionally open
   name        = "${var.system_name}-${var.env_type}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
@@ -34,7 +34,9 @@ resource "aws_security_group" "alb" {
 
 # trivy:ignore:AVD-AWS-0053
 resource "aws_lb" "app" {
-  # checkov:skip=CKV_AWS_150: Deletion protection is configurable via variable
+  # checkov:skip=CKV_AWS_150:Deletion protection is configurable via variable
+  # checkov:skip=CKV2_AWS_28:WAF association is managed via CloudFront WAFv2
+  # checkov:skip=CKV2_AWS_20:HTTP-to-HTTPS redirect is handled at the CloudFront layer
   name                                        = local.lb_name
   internal                                    = false
   load_balancer_type                          = "application"
@@ -78,6 +80,7 @@ resource "aws_lb" "app" {
 }
 
 resource "aws_lb_target_group" "app" {
+  # checkov:skip=CKV_AWS_378:Target group protocol is configurable via variables
   name                              = "${local.lb_name}-target-group"
   port                              = var.lb_target_group_port
   protocol                          = var.lb_target_group_protocol
@@ -145,7 +148,8 @@ resource "aws_lb_target_group" "app" {
 
 # trivy:ignore:AVD-AWS-0054
 resource "aws_lb_listener" "app" {
-  # checkov:skip=CKV_AWS_2: Listener protocol is configured via variables
+  # checkov:skip=CKV_AWS_2:Listener protocol is configured via variables
+  # checkov:skip=CKV_AWS_103:TLS policy is configurable via variables
   load_balancer_arn                                                     = aws_lb.app.arn
   port                                                                  = var.lb_listener_port
   protocol                                                              = var.lb_listener_protocol

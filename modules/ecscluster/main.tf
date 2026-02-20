@@ -1,6 +1,6 @@
 # trivy:ignore:AVD-AWS-0034
 resource "aws_ecs_cluster" "main" {
-  # checkov:skip=CKV_AWS_65: Container insights is configurable via variables
+  # checkov:skip=CKV_AWS_65:Container insights is configurable via variables
   name = local.ecs_cluster_name
   configuration {
     execute_command_configuration {
@@ -40,7 +40,7 @@ resource "aws_ecs_cluster" "main" {
 
 # trivy:ignore:AVD-AWS-0017
 resource "aws_cloudwatch_log_group" "cluster" {
-  # checkov:skip=CKV_AWS_338: Retention period is configurable via variables
+  # checkov:skip=CKV_AWS_338:Retention period is configurable via variables
   count             = var.ecs_cluster_execute_command_logging != "NONE" && var.ecs_cluster_execute_command_log_s3_bucket_name == null ? 1 : 0
   name              = "/${var.system_name}/${var.env_type}/ecs/cluster/${local.ecs_cluster_name}"
   retention_in_days = var.cloudwatch_logs_retention_in_days

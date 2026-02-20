@@ -1,6 +1,6 @@
 # trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs" {
-  # checkov:skip=CKV_AWS_382: ECS task egress is intentionally open
+  # checkov:skip=CKV_AWS_382:ECS task egress is intentionally open
   name        = "${var.system_name}-${var.env_type}-ecs-sg"
   description = "Security group for ECS tasks"
   vpc_id      = var.vpc_id
