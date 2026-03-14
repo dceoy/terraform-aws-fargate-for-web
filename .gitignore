@@ -38,6 +38,3 @@ terraform.rc
 
 # .terragrunt-cache directory
 .terragrunt-cache/
-
-# Serena MCP
-.serena/
