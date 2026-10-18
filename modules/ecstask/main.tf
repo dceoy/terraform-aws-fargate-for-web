@@ -74,7 +74,7 @@ resource "aws_iam_role_policy_attachment" "task" {
   policy_arn = each.key
 }
 
-# trivy:ignore:AVD-AWS-0017
+# trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "task" {
   # checkov:skip=CKV_AWS_338:Retention period is configurable via variables
   name              = "/${var.system_name}/${var.env_type}/ecs/task/${local.ecs_task_definition_family}"
