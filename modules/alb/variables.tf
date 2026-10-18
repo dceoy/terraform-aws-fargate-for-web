@@ -305,7 +305,7 @@ variable "lb_listener_protocol" {
 variable "lb_listener_ssl_policy" {
   description = "SSL policy for the ALB listener"
   type        = string
-  default     = "ELBSecurityPolicy-2016-08"
+  default     = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
 }
 
 variable "lb_listener_certificate_arn" {
