@@ -1,5 +1,5 @@
-# trivy:ignore:AVD-AWS-0104
-# trivy:ignore:AVD-AWS-0107
+# trivy:ignore:AWS-0104
+# trivy:ignore:AWS-0107
 resource "aws_security_group" "alb" {
   # checkov:skip=CKV_AWS_382:ALB egress is intentionally open
   name        = "${var.system_name}-${var.env_type}-alb-sg"
@@ -32,7 +32,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
-# trivy:ignore:AVD-AWS-0053
+# trivy:ignore:AWS-0053
 # ALB access logs are enabled whenever lb_logs_s3_bucket_id is provided.
 # nosemgrep: terraform.aws.security.aws-elb-access-logs-not-enabled.aws-elb-access-logs-not-enabled
 resource "aws_lb" "app" {
@@ -148,7 +148,7 @@ resource "aws_lb_target_group" "app" {
   }
 }
 
-# trivy:ignore:AVD-AWS-0054
+# trivy:ignore:AWS-0054
 resource "aws_lb_listener" "app" {
   # checkov:skip=CKV_AWS_2:Listener protocol is configured via variables
   # checkov:skip=CKV_AWS_103:TLS policy is configurable via variables
