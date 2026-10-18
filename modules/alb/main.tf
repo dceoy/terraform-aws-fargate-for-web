@@ -33,6 +33,8 @@ resource "aws_security_group" "alb" {
 }
 
 # trivy:ignore:AVD-AWS-0053
+# ALB access logs are enabled whenever lb_logs_s3_bucket_id is provided.
+# nosemgrep: terraform.aws.security.aws-elb-access-logs-not-enabled.aws-elb-access-logs-not-enabled
 resource "aws_lb" "app" {
   # checkov:skip=CKV_AWS_150:Deletion protection is configurable via variable
   # checkov:skip=CKV2_AWS_28:WAF association is managed via CloudFront WAFv2
