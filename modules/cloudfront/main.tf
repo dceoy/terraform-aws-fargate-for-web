@@ -125,6 +125,8 @@ resource "aws_cloudfront_origin_access_control" "s3" {
 }
 
 # trivy:ignore:AVD-AWS-0010
+# TLS minimum version is configurable and defaults to TLS 1.2 (see variables.tf).
+# nosemgrep: terraform.aws.security.aws-cloudfront-insecure-tls.aws-insecure-cloudfront-distribution-tls-version
 resource "aws_cloudfront_distribution" "cdn" {
   # checkov:skip=CKV_AWS_86:Logging is optional and managed via log delivery resources
   # checkov:skip=CKV_AWS_174:TLS minimum protocol version is configurable via variables
