@@ -64,7 +64,7 @@ jobs:
     uses: dceoy/gha-for-devops/.github/workflows/python-package-lint-and-scan.yml@main   # zizmor: ignore[unpinned-uses]
     with:
       package-path: .
-      python-version: 3.x
+      python-version: '3.14'
   dependabot-auto-merge:
     if: >
       github.event_name == 'pull_request'
