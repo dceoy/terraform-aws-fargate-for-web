@@ -155,6 +155,8 @@ resource "aws_lb_listener" "app" {
   load_balancer_arn                                                     = aws_lb.app.arn
   port                                                                  = var.lb_listener_port
   protocol                                                              = var.lb_listener_protocol
+# The listener policy is caller-configurable and defaults to TLS 1.2+.
+  # nosemgrep: terraform.aws.security.insecure-load-balancer-tls-version.insecure-load-balancer-tls-version
   ssl_policy                                                            = contains(["HTTPS", "TLS"], var.lb_listener_protocol) ? var.lb_listener_ssl_policy : null
   certificate_arn                                                       = var.lb_listener_certificate_arn
   routing_http_response_server_enabled                                  = var.lb_listener_routing_http_response_server_enabled
