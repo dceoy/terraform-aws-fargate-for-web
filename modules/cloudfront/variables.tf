@@ -235,7 +235,7 @@ variable "cloudfront_viewer_certificate_acm_arn" {
 variable "cloudfront_viewer_certificate_minimum_protocol_version" {
   description = "Minimum version of the SSL protocol to be used for HTTPS connections between viewers and the CloudFront distribution"
   type        = string
-  default     = "TLSv1"
+  default     = "TLSv1.2_2021"
 }
 
 variable "cloudfront_realtime_metrics_subscription_status" {

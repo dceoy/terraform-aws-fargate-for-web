@@ -1,5 +1,5 @@
-# trivy:ignore:AVD-AWS-0104
-# trivy:ignore:AVD-AWS-0107
+# trivy:ignore:AWS-0104
+# trivy:ignore:AWS-0107
 resource "aws_security_group" "alb" {
   # checkov:skip=CKV_AWS_382:ALB egress is intentionally open
   name        = "${var.system_name}-${var.env_type}-alb-sg"
@@ -32,8 +32,9 @@ resource "aws_security_group" "alb" {
   }
 }
 
-# trivy:ignore:AVD-AWS-0053
-resource "aws_lb" "app" {
+# ALB access logs are enabled whenever lb_logs_s3_bucket_id is provided.
+# trivy:ignore:AWS-0053
+resource "aws_lb" "app" { # nosemgrep: terraform.aws.security.aws-elb-access-logs-not-enabled.aws-elb-access-logs-not-enabled
   # checkov:skip=CKV_AWS_150:Deletion protection is configurable via variable
   # checkov:skip=CKV2_AWS_28:WAF association is managed via CloudFront WAFv2
   # checkov:skip=CKV2_AWS_20:HTTP-to-HTTPS redirect is handled at the CloudFront layer
@@ -146,14 +147,14 @@ resource "aws_lb_target_group" "app" {
   }
 }
 
-# trivy:ignore:AVD-AWS-0054
+# trivy:ignore:AWS-0054
 resource "aws_lb_listener" "app" {
   # checkov:skip=CKV_AWS_2:Listener protocol is configured via variables
   # checkov:skip=CKV_AWS_103:TLS policy is configurable via variables
   load_balancer_arn                                                     = aws_lb.app.arn
   port                                                                  = var.lb_listener_port
   protocol                                                              = var.lb_listener_protocol
-  ssl_policy                                                            = contains(["HTTPS", "TLS"], var.lb_listener_protocol) ? var.lb_listener_ssl_policy : null
+  ssl_policy                                                            = contains(["HTTPS", "TLS"], var.lb_listener_protocol) ? var.lb_listener_ssl_policy : null # nosemgrep: terraform.aws.security.insecure-load-balancer-tls-version.insecure-load-balancer-tls-version
   certificate_arn                                                       = var.lb_listener_certificate_arn
   routing_http_response_server_enabled                                  = var.lb_listener_routing_http_response_server_enabled
   routing_http_response_strict_transport_security_header_value          = var.lb_listener_routing_http_response_strict_transport_security_header_value

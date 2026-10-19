@@ -124,8 +124,9 @@ resource "aws_cloudfront_origin_access_control" "s3" {
   signing_protocol                  = "sigv4"
 }
 
-# trivy:ignore:AVD-AWS-0010
-resource "aws_cloudfront_distribution" "cdn" {
+# TLS minimum version is configurable and defaults to TLS 1.2 (see variables.tf).
+# trivy:ignore:AWS-0010
+resource "aws_cloudfront_distribution" "cdn" { # nosemgrep: terraform.aws.security.aws-cloudfront-insecure-tls.aws-insecure-cloudfront-distribution-tls-version
   # checkov:skip=CKV_AWS_86:Logging is optional and managed via log delivery resources
   # checkov:skip=CKV_AWS_174:TLS minimum protocol version is configurable via variables
   # checkov:skip=CKV_AWS_310:Origin failover is not required for this single-origin setup
