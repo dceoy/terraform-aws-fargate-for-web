@@ -88,3 +88,6 @@ only-include = ["pyproject.toml", "src/**", "README.md"]
 
 [tool.hatch.build.targets.sdist]
 only-include = ["pyproject.toml", "src/**", "README.md"]
+
+[tool.uv]
+exclude-newer = "1 day"
