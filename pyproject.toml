@@ -12,16 +12,19 @@ dependencies = [
 dev = [
   "ruff>=0.17.0,<0.18.0",
   "pyright>=1.1.379,<1.2.0",
-  "types-cachetools>=6.0.0,<7.0.0",
+  "types-cachetools>=6.0.0,<8.0.0",
   "types-decorator>=5.1.8,<6.0.0",
   "types-jsonschema>=4.23.0,<5.0.0",
-  "types-protobuf>=6.30.2,<7.0.0",
+  "types-protobuf>=6.30.2,<8.0.0",
   "types-pycurl>=7.45.4,<8.0.0",
   "types-toml>=0.10.8,<0.11.0",
 ]
 
 [tool.uv]
-exclude-newer-package = { certifi = "2026-10-21T00:00:00Z", pillow = "2026-10-18T00:00:00Z", streamlit = "2026-10-22T00:00:00Z" }
+exclude-newer = "1 day"
+certifi = "2026-10-21T00:00:00Z"
+pillow = "2026-10-18T00:00:00Z"
+streamlit = "2026-10-22T00:00:00Z"
 
 [tool.uv.build-backend]
 source-include = ["src/**", "pyproject.toml", "README.md"]
@@ -92,5 +95,3 @@ only-include = ["pyproject.toml", "src/**", "README.md"]
 [tool.hatch.build.targets.sdist]
 only-include = ["pyproject.toml", "src/**", "README.md"]
 
-[tool.uv]
-exclude-newer = "1 day"
