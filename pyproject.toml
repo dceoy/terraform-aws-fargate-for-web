@@ -22,6 +22,9 @@ dev = [
 
 [tool.uv]
 exclude-newer = "1 day"
+certifi = "2026-10-21T00:00:00Z"
+pillow = "2026-10-18T00:00:00Z"
+streamlit = "2026-10-22T00:00:00Z"
 
 [tool.uv.build-backend]
 source-include = ["src/**", "pyproject.toml", "README.md"]
