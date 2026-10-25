@@ -4,4 +4,5 @@ include "root" {
 
 terraform {
   source = "${get_repo_root()}/modules/kms"
+  copy_terraform_lock_file = false
 }
