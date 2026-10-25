@@ -58,6 +58,6 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/ecsservice"
+  source                   = "${get_repo_root()}/modules/ecsservice"
   copy_terraform_lock_file = false
 }
