@@ -27,4 +27,5 @@ inputs = {
 
 terraform {
   source = "${get_repo_root()}/modules/cloudfront"
+  copy_terraform_lock_file = false
 }

@@ -17,4 +17,5 @@ inputs = {
 
 terraform {
   source = "${get_repo_root()}/modules/chatbot"
+  copy_terraform_lock_file = false
 }
