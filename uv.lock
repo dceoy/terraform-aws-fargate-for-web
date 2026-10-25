@@ -3,6 +3,8 @@ revision = 5
 requires-python = ">=3.13, <4.0"
 
 [options]
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
+exclude-newer-span = "PT24H"
 
 [options.exclude-newer-package]
 certifi = "2026-10-21T00:00:00Z"
