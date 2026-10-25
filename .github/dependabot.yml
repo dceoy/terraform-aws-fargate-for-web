@@ -36,7 +36,9 @@ updates:
         patterns:
           - '*'
   - package-ecosystem: terraform
-    directory: /modules/kms/
+    directories:
+      - /modules/*
+      - /envs/dev/*
     schedule:
       interval: daily
     open-pull-requests-limit: 10
