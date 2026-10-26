@@ -45,5 +45,6 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/ecstask"
+  source                   = "${get_repo_root()}/modules/ecstask"
+  copy_terraform_lock_file = false
 }
