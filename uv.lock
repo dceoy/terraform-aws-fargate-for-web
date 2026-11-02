@@ -974,11 +974,11 @@ wheels = [
 
 [[package]]
 name = "types-pycurl"
-version = "7.48.0.20260923"
+version = "7.49.0.20261030"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/35/26/6b5226e66058613d1428850d311cab4bc3c35001b4dc749dea00c823f973/types_pycurl-7.48.0.20260923.tar.gz", hash = "sha256:d12803f4883ca57fffcd9fdf104d76daa079adaf6d225963bbe75b7de4b40aeb", size = 18134, upload-time = "2026-09-23T06:51:59.706Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/de/2c/07bca35227136d1030877db70a25ad9a5d8bfaeadd088f88fde48cfe1a28/types_pycurl-7.49.0.20261030.tar.gz", hash = "sha256:e81fd0389c8d7474da3f91d78602984c7955dd5a116e766ab082435407d8e1f7", size = 18187, upload-time = "2026-10-30T07:50:30.433Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/a9/630671072a482afc8e75fd1a4ffdecc400fd70846e197f3ce2cc6cfe628b/types_pycurl-7.48.0.20260923-py3-none-any.whl", hash = "sha256:25ce3dbe6c819813bc8004227fa034d625fecdf3ee2f1cade26b0a825f22bf7a", size = 16294, upload-time = "2026-09-23T06:51:58.59Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/8f/0cd92cd997c83f9f5317ea2de8c9b5f4e2ff896f352bacd30b6e37cde0a3/types_pycurl-7.49.0.20261030-py3-none-any.whl", hash = "sha256:d9da9765bde0e9ce178f5625a836160243a65f811044e5ccf8ee56ca04c689bc", size = 16334, upload-time = "2026-10-30T07:50:29.419Z" },
 ]
 
 [[package]]
