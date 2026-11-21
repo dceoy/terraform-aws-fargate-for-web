@@ -41,7 +41,7 @@ ignore = [
   "missing-type-function-argument",
   "missing-type-args",
   "missing-type-kwargs",
-  "missing-return-type-undocumented-public-function",
+  "missing-return-type-public-function",
   "missing-return-type-private-function",
   "missing-return-type-special-method",
   "missing-return-type-static-method",
